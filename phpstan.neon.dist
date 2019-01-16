@@ -1,0 +1,10 @@
+parameters:
+	level: max
+	paths:
+		- %currentWorkingDirectory%/src
+	excludes_analyse:
+		- %currentWorkingDirectory%/src/Bridge/Symfony/Bundle/DependencyInjection/Configuration.php
+
+includes:
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon

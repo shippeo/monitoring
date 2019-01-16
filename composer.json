@@ -1,0 +1,25 @@
+{
+    "name": "shippeo/monitoring",
+    "description": "This library aim to ease the monitoring of all the shippeo PHP applications",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^7.2",
+        "league/statsd": "^1.4",
+        "thecodingmachine/safe": "^0.1.11"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.10.8",
+        "phpstan/phpstan-strict-rules": "^0.10.1",
+        "symfony/framework-bundle": "^3.4 || ^4.0",
+        "thecodingmachine/phpstan-safe-rule": "^0.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shippeo\\Monitoring\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

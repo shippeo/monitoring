@@ -1,0 +1,6 @@
+#!/bin/sh
+
+docker run --rm --rm --interactive --tty --user $UID \
+                    --volume $PWD:/app \
+                    --volume $COMPOSER_HOME:/tmp \
+                    composer $@
