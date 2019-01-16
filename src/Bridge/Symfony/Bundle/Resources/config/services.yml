@@ -1,0 +1,9 @@
+services:
+    Shippeo\Heimdall\Domain\Database\DatabaseIterator:
+        arguments:
+            - !tagged monitoring.database
+
+    Shippeo\Heimdall\Domain\AddMetric:
+        arguments:
+            - '@Shippeo\Heimdall\Domain\Database\DatabaseIterator'
+        public: true

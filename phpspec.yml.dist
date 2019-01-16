@@ -1,0 +1,7 @@
+suites:
+    monitoring:
+        namespace: Shippeo\Heimdall
+        src_path: Shippeo\Heimdall
+        psr4_prefix: Shippeo\Heimdall
+        spec_path: 'tests'
+        spec_prefix: 'Spec'

@@ -12,6 +12,16 @@ WORKDIR /www-data
 
 COPY --from=composer-dev /app .
 ADD src src
+ADD tests tests
+
+ADD phpspec.yml.dist ./phpspec.yml.dist
+RUN vendor/bin/phpspec run
+
+ADD phpunit.xml.dist ./phpunit.xml.dist
+RUN vendor/bin/phpunit
+
+ADD .php_cs.dist ./.php_cs.dist
+RUN vendor/bin/php-cs-fixer fix --dry-run --diff
 
 ADD phpstan.neon.dist ./phpstan.neon.dist
 RUN vendor/bin/phpstan analyse

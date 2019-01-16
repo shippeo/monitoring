@@ -9,14 +9,28 @@
         "thecodingmachine/safe": "^0.1.11"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.10.8",
-        "phpstan/phpstan-strict-rules": "^0.10.1",
+        "friendsofphp/php-cs-fixer": "^2.14",
+        "jangregor/phpstan-prophecy": "^0.3.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^3.1",
+        "pedrotroller/php-cs-custom-fixer": "^2.16",
+        "phpspec/phpspec": "^5.1",
+        "phpstan/phpstan": "^0.11",
+        "phpstan/phpstan-phpunit": "^0.11.0",
+        "phpstan/phpstan-strict-rules": "^0.11",
+        "phpunit/phpunit": "^7.5",
         "symfony/framework-bundle": "^3.4 || ^4.0",
-        "thecodingmachine/phpstan-safe-rule": "^0.1.0"
+        "thecodingmachine/phpstan-safe-rule": "^0.1"
     },
     "autoload": {
         "psr-4": {
-            "Shippeo\\Monitoring\\": "src/"
+            "Shippeo\\Heimdall\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spec\\": "tests/Spec/",
+            "Fake\\": "tests/Fake/",
+            "Functional\\": "tests/Functional/"
         }
     },
     "config": {
