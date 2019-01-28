@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Functional\Bridge\Symfony;
 
-use Shippeo\Heimdall\Domain\AddMetric;
+use Shippeo\Heimdall\Application\AddMetric;
 
 /**
  * @internal

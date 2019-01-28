@@ -3,7 +3,11 @@ services:
         arguments:
             - !tagged monitoring.database
 
-    Shippeo\Heimdall\Domain\AddMetric:
+    Shippeo\Heimdall\Domain\SaveMetric:
         arguments:
             - '@Shippeo\Heimdall\Domain\Database\DatabaseIterator'
+
+    Shippeo\Heimdall\Application\AddMetric:
+        arguments:
+            - '@Shippeo\Heimdall\Domain\SaveMetric'
         public: true

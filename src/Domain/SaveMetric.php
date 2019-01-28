@@ -8,7 +8,7 @@ use Shippeo\Heimdall\Domain\Database\Database;
 use Shippeo\Heimdall\Domain\Database\DatabaseIterator;
 use Shippeo\Heimdall\Domain\Metric\Metric;
 
-final class AddMetric
+final class SaveMetric
 {
     /** @var DatabaseIterator */
     private $databases;
