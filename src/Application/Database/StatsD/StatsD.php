@@ -18,7 +18,7 @@ final class StatsD implements Database
         $this->client = $client;
     }
 
-    public function add(Metric $metric): void
+    public function store(Metric $metric): void
     {
         if (!$metric instanceof Increment) {
             throw new \LogicException('not implemented yet');

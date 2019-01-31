@@ -27,7 +27,7 @@ final class AddMetricSpec extends ObjectBehavior
     {
         $this->beConstructedWith(new SaveMetric(new DatabaseIterator([$database->getWrappedObject()])));
 
-        $database->add($metric)->shouldBeCalled();
+        $database->store($metric)->shouldBeCalled();
 
         $this->__invoke($metric);
     }

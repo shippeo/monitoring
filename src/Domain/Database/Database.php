@@ -8,5 +8,5 @@ use Shippeo\Heimdall\Domain\Metric\Metric;
 
 interface Database
 {
-    public function add(Metric $metric): void;
+    public function store(Metric $metric): void;
 }

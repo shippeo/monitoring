@@ -29,10 +29,10 @@ class SaveMetricSpec extends ObjectBehavior
         $this->shouldHaveType(SaveMetric::class);
     }
 
-    function it_adds_metric_to_every_known_database(Database $database1, Database $database2, Metric $metric)
+    function it_stores_metric_to_every_known_database(Database $database1, Database $database2, Metric $metric)
     {
-        $database1->add($metric)->shouldBeCalled();
-        $database2->add($metric)->shouldBeCalled();
+        $database1->store($metric)->shouldBeCalled();
+        $database2->store($metric)->shouldBeCalled();
 
         $this->__invoke($metric);
     }
