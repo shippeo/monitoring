@@ -14,7 +14,7 @@ final class Request extends Increment
     /** @var null|string */
     private $endpoint;
 
-    public function __construct(User $user, ?string $endpoint)
+    public function __construct(User $user, string $endpoint)
     {
         $this->user = $user;
         $this->endpoint = $endpoint;

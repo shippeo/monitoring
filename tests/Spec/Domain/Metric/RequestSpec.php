@@ -12,9 +12,12 @@ use Shippeo\Heimdall\Domain\Metric\Request;
 
 class RequestSpec extends ObjectBehavior
 {
+    /** @var string */
+    private $endpoint = 'fakeEndpoint';
+
     function let()
     {
-        $this->beConstructedWith(new User(), null);
+        $this->beConstructedWith(new User(), $this->endpoint);
     }
 
     function it_is_initializable()
@@ -50,7 +53,7 @@ class RequestSpec extends ObjectBehavior
             ->tags()
             ->shouldBe(
                 [
-                    'endpoint' => null,
+                    'endpoint' => $this->endpoint,
                     'organization' => $user->organization()->id(),
                     'user' => $user->id(),
                 ]
