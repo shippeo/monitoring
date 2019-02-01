@@ -11,3 +11,10 @@ trim_trailing_whitespace = true
 
 [*.md]
 trim_trailing_whitespace = false
+
+[{*.neon, *.neon.dist}]
+indent_style = tab
+tab_width = 4
+
+[.circleci/config.yml]
+indent_size = 2

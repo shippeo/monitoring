@@ -1,0 +1,5 @@
+services:
+    Shippeo\Heimdall\Application\AddMetric:
+        arguments:
+            - !tagged monitoring.database
+        public: true

@@ -1,0 +1,13 @@
+parameters:
+	level: max
+	paths:
+		- %currentWorkingDirectory%/src
+		- %currentWorkingDirectory%/tests
+	excludes_analyse:
+		- %currentWorkingDirectory%/tests/Spec/**
+
+includes:
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/jangregor/phpstan-prophecy/src/extension.neon
