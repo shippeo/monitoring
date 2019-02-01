@@ -58,6 +58,22 @@ monitoring:
         port: 8125 # The port to connect to your statsD server in UDP
 ```
 
+## Usage
+
+### Using the library directly
+With instances of `Database`: $database1, $database2 and instance of `Metric` $metric .
+```php
+(new AddMetric([$database1, $database2]))($metric);
+```
+
+### Using the symfony bridge
+With instance of `Metric` $metric.
+```php
+$this->get(AddMetric::class)($metric);
+```
+
+> Your databases should already be configured by the bundle.
+
 ## Domain
 
 ### Ubiquitous Language
