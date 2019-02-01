@@ -8,8 +8,6 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\MonitoringExtension;
-use Shippeo\Heimdall\Domain\Database\DatabaseIterator;
-use Shippeo\Heimdall\Domain\SaveMetric;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -46,8 +44,6 @@ final class ExtensionTest extends AbstractExtensionTestCase
             'monitoring.database'
         );
 
-        $this->assertContainerBuilderHasService(DatabaseIterator::class);
-        $this->assertContainerBuilderHasService(SaveMetric::class);
         $this->assertContainerBuilderHasService(AddMetric::class);
     }
 

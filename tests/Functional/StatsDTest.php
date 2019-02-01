@@ -11,9 +11,7 @@ use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
-use Shippeo\Heimdall\Domain\Database\DatabaseIterator;
 use Shippeo\Heimdall\Domain\Metric\Request;
-use Shippeo\Heimdall\Domain\SaveMetric;
 
 /**
  * @internal
@@ -45,11 +43,7 @@ final class StatsDTest extends TestCase
         ;
 
         (
-            new AddMetric(
-                new SaveMetric(
-                    new DatabaseIterator([new StatsD($client->reveal())])
-                )
-            )
+            new AddMetric([new StatsD($client->reveal())])
         )(
             new Request($user, $endpoint)
         );

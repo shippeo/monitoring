@@ -7,15 +7,13 @@ namespace Spec\Shippeo\Heimdall\Application;
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Domain\Database\Database;
-use Shippeo\Heimdall\Domain\Database\DatabaseIterator;
 use Shippeo\Heimdall\Domain\Metric\Metric;
-use Shippeo\Heimdall\Domain\SaveMetric;
 
 final class AddMetricSpec extends ObjectBehavior
 {
     function let()
     {
-        $this->beConstructedWith(new SaveMetric(new DatabaseIterator([])));
+        $this->beConstructedWith([]);
     }
 
     function it_is_initializable()
@@ -25,7 +23,7 @@ final class AddMetricSpec extends ObjectBehavior
 
     function it_invokes_save_metric(Database $database, Metric $metric)
     {
-        $this->beConstructedWith(new SaveMetric(new DatabaseIterator([$database->getWrappedObject()])));
+        $this->beConstructedWith([$database->getWrappedObject()]);
 
         $database->store($metric)->shouldBeCalled();
 
