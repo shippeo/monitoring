@@ -28,11 +28,20 @@ The first thing you need to do is require the library in you project.
 composer require shippeo/monitoring
 ```
 
-### (Optional) load the bundle
-The library is not dependant of symfony.
-But it contain a bridge to symfony. This aim to ease the implementation of the library.
+## Basic Usage
 
-It also provide extra features out of the box as the request subscriber (monitor requests).
+With instances of `Database`: $database1, $database2 and instance of `Metric` $metric .
+```php
+(new AddMetric([$database1, $database2]))($metric);
+```
+
+## Integration with other libraries
+
+The library is not dependant of any framework. It has nontheless a bridge system to allow an easier integration.
+
+### Using the Symfony bridge
+
+The bridge also provide extra features out of the box as the request subscriber (monitor requests).
 
 To activate it
 * add the bundle to your kernel
@@ -58,19 +67,8 @@ monitoring:
         port: 8125 # The port to connect to your statsD server in UDP
 ```
 
-## Usage
-
-### Using the library directly
-With instances of `Database`: $database1, $database2 and instance of `Metric` $metric .
-```php
-(new AddMetric([$database1, $database2]))($metric);
-```
-
-### Using the symfony bridge
-With instance of `Metric` $metric.
-```php
-$this->get(AddMetric::class)($metric);
-```
+### Add a metric
+Use the `\Shippeo\Heimdall\Application\AddMetric` service. it is a public service that can directly take a metric.
 
 > Your databases should already be configured by the bundle.
 
@@ -90,7 +88,7 @@ It is a lot more permissive than a classic "table" as it is created automaticall
 
 ### Stack
 We are using the TIG stack. It stands for Telegraf, InfluxDB, Grafana.
-It is the best open source stack for collecting and visualizing data.
+It is an open source stack for collecting and visualizing data.
 
 #### [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
 It is an agent for collecting metrics and writing them.
