@@ -12,7 +12,7 @@ final class Request implements Counter
     /** @var User */
     private $user;
 
-    /** @var null|string */
+    /** @var string */
     private $endpoint;
 
     public function __construct(User $user, string $endpoint)
