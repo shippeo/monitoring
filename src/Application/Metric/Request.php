@@ -21,16 +21,25 @@ final class Request implements Counter
         $this->endpoint = $endpoint;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function key(): string
     {
         return 'api.request';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function value(): int
     {
         return 1;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function tags(): array
     {
         return [
