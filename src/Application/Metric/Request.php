@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Shippeo\Heimdall\Domain\Metric;
+namespace Shippeo\Heimdall\Application\Metric;
 
+use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\User;
 
-final class Request extends Increment
+final class Request implements Counter
 {
     /** @var User */
     private $user;
 
-    /** @var null|string */
+    /** @var string */
     private $endpoint;
 
     public function __construct(User $user, string $endpoint)
@@ -20,11 +21,25 @@ final class Request extends Increment
         $this->endpoint = $endpoint;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function key(): string
     {
         return 'api.request';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function value(): int
+    {
+        return 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function tags(): array
     {
         return [
