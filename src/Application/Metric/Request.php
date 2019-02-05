@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Shippeo\Heimdall\Domain\Metric;
+namespace Shippeo\Heimdall\Application\Metric;
 
+use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\User;
 
 final class Request implements Counter

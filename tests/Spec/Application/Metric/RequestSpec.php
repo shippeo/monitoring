@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Spec\Shippeo\Heimdall\Domain\Metric;
+namespace Spec\Shippeo\Heimdall\Application\Metric;
 
 use Fake\User;
 use PhpSpec\ObjectBehavior;
+use Shippeo\Heimdall\Application\Metric\Request;
 use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\Metric\Metric;
-use Shippeo\Heimdall\Domain\Metric\Request;
 
 class RequestSpec extends ObjectBehavior
 {

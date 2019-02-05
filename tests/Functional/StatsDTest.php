@@ -11,7 +11,7 @@ use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
-use Shippeo\Heimdall\Domain\Metric\Request;
+use Shippeo\Heimdall\Application\Metric\Request;
 
 /**
  * @internal
