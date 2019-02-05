@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Application\Database\StatsD;
 
 use Shippeo\Heimdall\Domain\Database\Database;
-use Shippeo\Heimdall\Domain\Metric\Increment;
+use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\Metric\Metric;
 
 final class StatsD implements Database
@@ -20,7 +20,7 @@ final class StatsD implements Database
 
     public function store(Metric $metric): void
     {
-        if (!$metric instanceof Increment) {
+        if (!$metric instanceof Counter) {
             throw new \LogicException('not implemented yet');
         }
 

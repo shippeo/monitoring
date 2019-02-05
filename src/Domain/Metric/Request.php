@@ -6,7 +6,7 @@ namespace Shippeo\Heimdall\Domain\Metric;
 
 use Shippeo\Heimdall\Domain\User;
 
-final class Request extends Increment
+final class Request implements Counter
 {
     /** @var User */
     private $user;
@@ -23,6 +23,11 @@ final class Request extends Increment
     public function key(): string
     {
         return 'api.request';
+    }
+
+    public function value(): int
+    {
+        return 1;
     }
 
     public function tags(): array
