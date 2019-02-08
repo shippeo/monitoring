@@ -67,6 +67,8 @@ monitoring:
         port: 8125 # The port to connect to your statsD server in UDP
 ```
 
+* Add a service which implements the `Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider` interface.
+
 ### Add a metric
 Use the `\Shippeo\Heimdall\Application\AddMetric` service. it is a public service that can directly take a metric.
 
