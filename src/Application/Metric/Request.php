@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Application\Metric;
 
 use Shippeo\Heimdall\Domain\Metric\Counter;
-use Shippeo\Heimdall\Domain\User;
+use Shippeo\Heimdall\Domain\Model\StandardUser;
+use Shippeo\Heimdall\Domain\Model\User;
 
 final class Request implements Counter
 {
-    /** @var User */
+    /** @var null|\Shippeo\Heimdall\Domain\Model\User */
     private $user;
 
     /** @var string */
     private $endpoint;
 
-    public function __construct(User $user, string $endpoint)
+    public function __construct(?User $user, string $endpoint)
     {
         $this->user = $user;
         $this->endpoint = $endpoint;
@@ -42,10 +43,26 @@ final class Request implements Counter
      */
     public function tags(): array
     {
-        return [
-            'endpoint' => $this->endpoint,
-            'organization' => $this->user->organization()->id(),
-            'user' => $this->user->id(),
-        ];
+        return $this->withUserTags(
+            [
+                'endpoint' => $this->endpoint,
+                'organization' => null,
+                'user' => null,
+            ]
+        );
+    }
+
+    private function withUserTags(array $tags): array
+    {
+        if ($this->user === null) {
+            return $tags;
+        }
+
+        $tags['user'] = (string) $this->user->id();
+        if ($this->user instanceof StandardUser) {
+            $tags['organization'] = (string) $this->user->organization()->id();
+        }
+
+        return $tags;
     }
 }
