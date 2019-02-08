@@ -4,10 +4,20 @@ declare(strict_types=1);
 
 namespace Fake;
 
-final class Organization implements \Shippeo\Heimdall\Domain\Organization
+use Shippeo\Heimdall\Domain\Model\Identifier\OrganizationId;
+
+final class Organization implements \Shippeo\Heimdall\Domain\Model\Organization
 {
-    public function id(): string
+    /** @var OrganizationId */
+    private $id;
+
+    public function __construct()
     {
-        return 'fakeOrganizationId';
+        $this->id = new OrganizationId('ZYX87CBA');
+    }
+
+    public function id(): OrganizationId
+    {
+        return $this->id;
     }
 }

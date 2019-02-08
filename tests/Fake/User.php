@@ -4,26 +4,20 @@ declare(strict_types=1);
 
 namespace Fake;
 
-use Fake\Organization as FakeOrganization;
-use Shippeo\Heimdall\Domain\Organization;
+use Shippeo\Heimdall\Domain\Model\Identifier\UserId;
 
-final class User implements \Shippeo\Heimdall\Domain\User
+final class User implements \Shippeo\Heimdall\Domain\Model\User
 {
-    /** @var Organization */
-    private $organization;
+    /** @var UserId */
+    private $id;
 
     public function __construct()
     {
-        $this->organization = new FakeOrganization();
+        $this->id = new UserId('POI64MLK');
     }
 
-    public function id(): string
+    public function id(): UserId
     {
-        return 'fakeUserId';
-    }
-
-    public function organization(): Organization
-    {
-        return $this->organization;
+        return $this->id;
     }
 }
