@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Functional;
 
-use Fake\User;
+use Fake\StandardUser;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Shippeo\Heimdall\Application\AddMetric;
@@ -22,7 +22,7 @@ final class StatsDTest extends TestCase
     public function testSendRequestMetric(): void
     {
         $endpoint = 'fakeEndpoint';
-        $user = new User();
+        $user = new StandardUser();
 
         $client = $this->prophesize(Client::class);
         $client

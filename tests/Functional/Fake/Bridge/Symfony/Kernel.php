@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Functional\Fake\Bridge\Symfony;
 
+use Functional\Fake\Bridge\Symfony\Factory\UserProvider as FakeUserFactory;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\MonitoringBundle;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -37,6 +39,7 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
      */
     protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
+        $routes->import(__DIR__.'/Controller/DefaultController.php', '/', 'annotation');
     }
 
     /**
@@ -44,10 +47,12 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
      */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
+        $container->register(UserProvider::class, FakeUserFactory::class);
         $container->loadFromExtension(
             'framework',
             [
                 'secret' => 'MySecretKey',
+                'test' => null,
             ]
         );
 

@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Shippeo\Heimdall\Domain;
+namespace Shippeo\Heimdall\Domain\Model;
 
-interface User
+interface StandardUser extends User
 {
-    public function id(): string;
-
     public function organization(): Organization;
 }

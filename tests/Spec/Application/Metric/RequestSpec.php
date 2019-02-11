@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spec\Shippeo\Heimdall\Application\Metric;
 
+use Fake\StandardUser;
 use Fake\User;
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Application\Metric\Request;
@@ -54,8 +55,42 @@ class RequestSpec extends ObjectBehavior
             ->shouldBe(
                 [
                     'endpoint' => $this->endpoint,
-                    'organization' => $user->organization()->id(),
-                    'user' => $user->id(),
+                    'organization' => null,
+                    'user' => (string) $user->id(),
+                ]
+            )
+        ;
+    }
+
+    function it_returns_the_tags_for_a_standard_user()
+    {
+        $user = new StandardUser();
+
+        $this->beConstructedWith($user, $this->endpoint);
+
+        $this
+            ->tags()
+            ->shouldBe(
+                [
+                    'endpoint' => $this->endpoint,
+                    'organization' => (string) $user->organization()->id(),
+                    'user' => (string) $user->id(),
+                ]
+            )
+        ;
+    }
+
+    function it_returns_the_tags_without_user()
+    {
+        $this->beConstructedWith(null, $this->endpoint);
+
+        $this
+            ->tags()
+            ->shouldBe(
+                [
+                    'endpoint' => $this->endpoint,
+                    'organization' => null,
+                    'user' => null,
                 ]
             )
         ;
