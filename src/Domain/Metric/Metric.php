@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shippeo\Heimdall\Domain\Metric;
 
+use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
+
 interface Metric
 {
     /**
@@ -19,5 +21,5 @@ interface Metric
     /**
      * All extra informations.
      */
-    public function tags(): array;
+    public function tags(): TagIterator;
 }

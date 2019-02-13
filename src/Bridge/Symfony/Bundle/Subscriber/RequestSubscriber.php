@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Subscriber;
 
 use Shippeo\Heimdall\Application\AddMetric;
-use Shippeo\Heimdall\Application\Metric\Request;
+use Shippeo\Heimdall\Application\Metric\Template\Request;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
