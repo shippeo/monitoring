@@ -17,6 +17,12 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
+        /** @var ArrayNodeDefinition $globalTagsNode */
+        $globalTagsNode = (new ArrayNodeDefinition('globalTags'))
+            ->scalarPrototype()
+            ->end()
+        ;
+
         /** @var ArrayNodeDefinition $root */
         $root = $treeBuilder->root('monitoring');
         $root
@@ -35,6 +41,9 @@ final class Configuration implements ConfigurationInterface
                             ->isRequired()
                             ->cannotBeEmpty()
                     )
+            )
+            ->append(
+                $globalTagsNode
             )
         ;
 

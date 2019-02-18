@@ -63,6 +63,10 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
                     'host' => 'fakeHost',
                     'port' => 4242,
                 ],
+                'globalTags' => [
+                    'globalTag1' => 'globalTagValue1',
+                    'globalTag2' => 2,
+                ],
             ]
         );
     }
