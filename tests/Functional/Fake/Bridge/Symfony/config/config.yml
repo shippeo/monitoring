@@ -1,4 +1,0 @@
-monitoring:
-    statsd:
-        host: 'fakeHost'
-        port: 8797

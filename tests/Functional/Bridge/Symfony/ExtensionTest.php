@@ -7,7 +7,10 @@ namespace Functional\Bridge\Symfony;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
+use Shippeo\Heimdall\Application\Metric\Factory;
+use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\MonitoringExtension;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\Tag\GlobalTagFactory;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -21,6 +24,11 @@ final class ExtensionTest extends AbstractExtensionTestCase
     private $host = 'fakeStatsDHost';
     /** @var int */
     private $port = 9874;
+    /** @var array */
+    private $globalTags = [
+        'globalTagName1' => 'globalTagValue1',
+        'globalTagName2' => 2,
+    ];
 
     public function testExtensionLoad(): void
     {
@@ -30,14 +38,24 @@ final class ExtensionTest extends AbstractExtensionTestCase
                     'host' => $this->host,
                     'port' => $this->port,
                 ],
+                'globalTags' => $this->globalTags,
             ]
+        );
+
+        $this->assertContainerBuilderHasService(Factory::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
+            Factory::class,
+            0,
+            (new Definition(TagCollection::class, [$this->globalTags]))
+                ->setFactory(GlobalTagFactory::class.'::create')
         );
 
         $this->assertContainerBuilderHasService(StatsD::class);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(
             StatsD::class,
             0,
-            (new Definition(StatsDClient::class, [['host' => $this->host, 'port' => $this->port]]))->setFactory(StatsDClient::class.'::fromArray')
+            (new Definition(StatsDClient::class, [['host' => $this->host, 'port' => $this->port]]))
+                ->setFactory(StatsDClient::class.'::fromArray')
         );
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             StatsD::class,
