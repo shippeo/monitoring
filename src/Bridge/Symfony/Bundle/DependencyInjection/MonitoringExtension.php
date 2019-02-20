@@ -39,12 +39,15 @@ final class MonitoringExtension extends Extension
         ;
 
         $container
+            ->register(StatsDClient::class)
+            ->setFactory(StatsDClient::class.'::fromArray')
+            ->setArguments([$config['statsD']])
+            ->setPublic(true) // this is for testing purpose only
+        ;
+
+        $container
             ->register(StatsD::class)
-            ->setArguments(
-                [
-                    (new Definition(StatsDClient::class, [$config['statsD']]))->setFactory(StatsDClient::class.'::fromArray'),
-                ]
-            )
+            ->setAutowired(true)
             ->addTag('monitoring.database')
         ;
     }
