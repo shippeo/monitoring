@@ -51,12 +51,10 @@ final class ExtensionTest extends AbstractExtensionTestCase
         );
 
         $this->assertContainerBuilderHasService(StatsD::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
-            StatsD::class,
-            0,
-            (new Definition(StatsDClient::class, [['host' => $this->host, 'port' => $this->port]]))
-                ->setFactory(StatsDClient::class.'::fromArray')
-        );
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(StatsD::class, 'monitoring.database');
+
+        $this->assertContainerBuilderHasService(StatsDClient::class);
+
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             StatsD::class,
             'monitoring.database'
