@@ -19,7 +19,7 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
     public function __construct()
     {
-        parent::__construct('test', true);
+        parent::__construct('test', false);
     }
 
     /**
