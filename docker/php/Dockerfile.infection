@@ -1,0 +1,25 @@
+FROM composer:latest as composer-dev
+
+ADD composer.json ./composer.json
+ADD composer.lock ./composer.lock
+ADD vendor vendor
+
+RUN composer install --no-interaction --no-progress --no-suggest
+
+FROM php:7.2-cli-alpine as php-dev
+
+RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && pecl install xdebug-2.6.0 && docker-php-ext-enable xdebug \
+    && apk del .phpize-deps
+
+WORKDIR /www-data
+
+COPY --from=composer-dev /app .
+ADD src src
+ADD tests tests
+
+ADD phpspec.yml.coverage ./phpspec.yml.dist
+ADD infection.json.dist ./infection.json.dist
+
+RUN vendor/bin/phpspec run
+RUN vendor/bin/infection --coverage=. && cat infection/output.log

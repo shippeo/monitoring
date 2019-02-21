@@ -1,0 +1,12 @@
+{
+    "timeout": 30,
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "infection/output.log"
+    },
+    "testFramework":"phpspec"
+}
