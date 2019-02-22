@@ -8,13 +8,24 @@ use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 
 final class Tag implements \Shippeo\Heimdall\Domain\Metric\Tag\Tag
 {
+    /** @var string */
+    private $name;
+    /** @var string */
+    private $value;
+
+    public function __construct(string $name = 'fakeTagName', string $value = 'fakeTagValue')
+    {
+        $this->name = $name;
+        $this->value = $value;
+    }
+
     public function name(): Name
     {
-        return new Name('fakeTagName');
+        return new Name($this->name);
     }
 
     public function value(): string
     {
-        return 'fakeTagValue';
+        return $this->value;
     }
 }

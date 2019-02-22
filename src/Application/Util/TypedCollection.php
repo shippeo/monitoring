@@ -40,16 +40,6 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
     /**
      * {@inheritdoc}
      *
-     * @return \Traversable
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->elements);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @param mixed $offset
      */
     public function offsetExists($offset): bool
