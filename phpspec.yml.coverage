@@ -9,5 +9,7 @@ extensions:
     LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
         format:
             - xml
+            - html
         output:
-            xml: phpspec-coverage-xml
+            xml: coverage/phpspec-coverage-xml
+            html: coverage/phpspec-coverage-html

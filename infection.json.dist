@@ -3,6 +3,10 @@
     "source": {
         "directories": [
             "src"
+        ],
+        "excludes": [
+            "Bridge\/Symfony\/Bundle\/DependencyInjection",
+            "Infrastructure"
         ]
     },
     "logs": {

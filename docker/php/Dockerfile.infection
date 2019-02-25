@@ -22,4 +22,4 @@ ADD phpspec.yml.coverage ./phpspec.yml.dist
 ADD infection.json.dist ./infection.json.dist
 
 RUN vendor/bin/phpspec run
-RUN vendor/bin/infection --coverage=. && cat infection/output.log
+RUN vendor/bin/infection --coverage=./coverage && cat infection/output.log
