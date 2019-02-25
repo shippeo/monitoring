@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Functional\Fake\Bridge\Symfony\Factory;
+namespace Functional\Fake\Bridge\Symfony\Provider;
 
 use Shippeo\Heimdall\Domain\Model\User;
 

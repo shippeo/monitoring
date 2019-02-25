@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Functional\Fake\Bridge\Symfony;
 
-use Functional\Fake\Bridge\Symfony\Factory\UserProvider as FakeUserFactory;
+use Functional\Fake\Bridge\Symfony\Provider\UserProvider as FakeUserProvider;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\MonitoringBundle;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -19,7 +19,7 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
     public function __construct()
     {
-        parent::__construct('test', true);
+        parent::__construct('test', false);
     }
 
     /**
@@ -47,7 +47,11 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
      */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $container->register(UserProvider::class, FakeUserFactory::class);
+        $container
+            ->register(UserProvider::class, FakeUserProvider::class)
+            ->setPublic(true)
+        ;
+
         $container->loadFromExtension(
             'framework',
             [
