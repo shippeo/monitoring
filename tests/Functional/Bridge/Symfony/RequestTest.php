@@ -8,11 +8,14 @@ use Functional\Fake\Bridge\Symfony\Provider\UserProvider as FakeUserProvider;
 use Prophecy\Argument;
 use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode as Code;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\GlobalTag;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP\StatusCode;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Shippeo\Heimdall\Domain\Metric\Tag;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @internal
@@ -56,6 +59,24 @@ final class RequestTest extends WebTestCase
             ),
             1
         )->shouldBeCalled();
+        $statsDClient->increment(
+            Argument::exact(
+                new Key(
+                    'api.response',
+                    new Tag\TagIterator(
+                        [
+                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new StatusCode(new Code(Response::HTTP_OK)),
+                            new Tag\User(null),
+                            new Tag\Organization(null),
+                            new GlobalTag('globalTag1', 'globalTagValue1'),
+                            new GlobalTag('globalTag2', '2'),
+                        ]
+                    )
+                )
+            ),
+            1
+        )->shouldBeCalled();
 
         $this->client->request('GET', '/');
 
@@ -87,6 +108,24 @@ final class RequestTest extends WebTestCase
             ),
             1
         )->shouldBeCalled();
+        $statsDClient->increment(
+            Argument::exact(
+                new Key(
+                    'api.response',
+                    new Tag\TagIterator(
+                        [
+                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new StatusCode(new Code(Response::HTTP_OK)),
+                            new Tag\User($user->id()),
+                            new Tag\Organization(null),
+                            new GlobalTag('globalTag1', 'globalTagValue1'),
+                            new GlobalTag('globalTag2', '2'),
+                        ]
+                    )
+                )
+            ),
+            1
+        )->shouldBeCalled();
 
         $this->client->request('GET', '/');
 
@@ -110,6 +149,24 @@ final class RequestTest extends WebTestCase
                             new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
                             new Tag\Organization($user->organization()->id()),
                             new Tag\User($user->id()),
+                            new GlobalTag('globalTag1', 'globalTagValue1'),
+                            new GlobalTag('globalTag2', '2'),
+                        ]
+                    )
+                )
+            ),
+            1
+        )->shouldBeCalled();
+        $statsDClient->increment(
+            Argument::exact(
+                new Key(
+                    'api.response',
+                    new Tag\TagIterator(
+                        [
+                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new StatusCode(new Code(Response::HTTP_OK)),
+                            new Tag\User($user->id()),
+                            new Tag\Organization($user->organization()->id()),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
                             new GlobalTag('globalTag2', '2'),
                         ]
