@@ -1,0 +1,15 @@
+suites:
+    monitoring:
+        namespace: Shippeo\Heimdall
+        src_path: Shippeo\Heimdall
+        psr4_prefix: Shippeo\Heimdall
+        spec_path: 'tests'
+        spec_prefix: 'Spec'
+extensions:
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+        format:
+            - xml
+            - html
+        output:
+            xml: coverage/phpspec-coverage-xml
+            html: coverage/phpspec-coverage-html

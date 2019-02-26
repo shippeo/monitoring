@@ -8,6 +8,7 @@ use Fake\Tag;
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Application\Util\TypedCollection;
+use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
 
 final class TagCollectionSpec extends ObjectBehavior
 {
@@ -116,6 +117,29 @@ final class TagCollectionSpec extends ObjectBehavior
                     $tag2,
                     $tag3,
                 ]
+            )
+        ;
+    }
+
+    function it_returns_the_tags_in_a_specific_iterator()
+    {
+        $tag1 = new Tag();
+        $tag2 = new Tag();
+        $tag3 = new Tag();
+
+        $this->beConstructedWith([$tag1, $tag2]);
+        $this->offsetSet(null, $tag3);
+
+        $this
+            ->getIterator()
+            ->shouldBeLike(
+                new TagIterator(
+                    [
+                        $tag1,
+                        $tag2,
+                        $tag3,
+                    ]
+                )
             )
         ;
     }

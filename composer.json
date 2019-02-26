@@ -11,7 +11,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",
+        "infection/infection": "^0.12.2",
         "jangregor/phpstan-prophecy": "^0.3.0",
+        "leanphp/phpspec-code-coverage": "dev-master",
         "matthiasnoback/symfony-dependency-injection-test": "^3.1",
         "pedrotroller/php-cs-custom-fixer": "^2.16",
         "phpspec/phpspec": "^5.1",
@@ -36,6 +38,17 @@
             "Functional\\": "tests/Functional/"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cdaguerre/phpspec-code-coverage",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/shippeo/monitoring"
+        }
+    ],
     "config": {
         "sort-packages": true
     }

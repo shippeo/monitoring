@@ -1,0 +1,16 @@
+{
+    "timeout": 30,
+    "source": {
+        "directories": [
+            "src"
+        ],
+        "excludes": [
+            "Bridge\/Symfony\/Bundle\/DependencyInjection",
+            "Infrastructure"
+        ]
+    },
+    "logs": {
+        "text": "infection/output.log"
+    },
+    "testFramework":"phpspec"
+}

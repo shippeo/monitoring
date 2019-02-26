@@ -37,14 +37,17 @@ class DatabaseIteratorSpec extends ObjectBehavior
         $this->beConstructedWith([$database1, $database2]);
 
         $this->valid()->shouldBe(true);
+        $this->key()->shouldBe(0);
         $this->current()->shouldBe($database1);
         $this->next();
         $this->valid()->shouldBe(true);
+        $this->key()->shouldBe(1);
         $this->current()->shouldBe($database2);
         $this->next();
         $this->valid()->shouldBe(false);
         $this->rewind();
         $this->valid()->shouldBe(true);
+        $this->key()->shouldBe(0);
         $this->current()->shouldBe($database1);
     }
 }
