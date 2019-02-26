@@ -37,4 +37,12 @@ final class StatsDClient implements Client
         } catch (ConnectionException $exception) {
         }
     }
+
+    public function timing(Key $key, float $time): void
+    {
+        try {
+            $this->client->timing((string) $key, $time);
+        } catch (ConnectionException $exception) {
+        }
+    }
 }
