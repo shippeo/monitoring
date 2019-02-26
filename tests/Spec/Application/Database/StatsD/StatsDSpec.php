@@ -14,6 +14,7 @@ use Shippeo\Heimdall\Domain\Database\Database;
 use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\Metric\Metric;
 use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
+use Shippeo\Heimdall\Domain\Metric\Timer;
 
 final class StatsDSpec extends ObjectBehavior
 {
@@ -34,18 +35,36 @@ final class StatsDSpec extends ObjectBehavior
 
     function it_throws_a_logic_exception_if_metric_is_not_a_counter(Metric $metric)
     {
+        $metric->key()->willReturn('fakeKey');
+        $metric->tags()->willReturn(new TagIterator([]));
+
         $this
             ->shouldThrow(\LogicException::class)
             ->during('store', [$metric])
         ;
     }
 
-    function it_stores_the_metric(Client $client)
+    function it_stores_a_counter_metric(Client $client)
     {
         $metric = new Counter('fakeKey', 1, new TagIterator([new Tag()]));
 
         $client
             ->increment(
+                Argument::exact(new Key($metric->key(), $metric->tags())),
+                $metric->value()
+            )
+            ->shouldBeCalledOnce()
+        ;
+
+        $this->store($metric);
+    }
+
+    function it_stores_a_timer_metric(Client $client)
+    {
+        $metric = new Timer('fakeKey', Timer\Time::now(), Timer\Time::now(), new TagIterator([new Tag()]));
+
+        $client
+            ->timing(
                 Argument::exact(new Key($metric->key(), $metric->tags())),
                 $metric->value()
             )
