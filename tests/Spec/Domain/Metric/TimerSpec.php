@@ -45,7 +45,7 @@ final class TimerSpec extends ObjectBehavior
         $this
             ->value()
             ->shouldBe(
-                \round($this->end->asMilliseconds() - $this->start->asMilliseconds(), 4)
+                $this->end->asMilliseconds() - $this->start->asMilliseconds()
             )
         ;
     }

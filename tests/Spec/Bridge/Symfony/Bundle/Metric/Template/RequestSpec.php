@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template;
 
 use PhpSpec\ObjectBehavior;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Response;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Request;
 use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
 use Shippeo\Heimdall\Domain\Metric\Template\Counter;
 use Shippeo\Heimdall\Domain\Metric\Template\Template;
 
-final class ResponseSpec extends ObjectBehavior
+final class RequestSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType(Response::class);
+        $this->shouldHaveType(Request::class);
     }
 
     function it_implements_Counter()
@@ -30,7 +30,7 @@ final class ResponseSpec extends ObjectBehavior
 
     function it_returns_the_name()
     {
-        $this->name()->shouldBe('api.response');
+        $this->name()->shouldBe('api.request');
     }
 
     function it_returns_the_value()
@@ -46,9 +46,8 @@ final class ResponseSpec extends ObjectBehavior
                 new NameIterator(
                     [
                         new Name('endpoint'),
-                        new Name('status_code'),
-                        new Name('user'),
                         new Name('organization'),
+                        new Name('user'),
                     ]
                 )
             )

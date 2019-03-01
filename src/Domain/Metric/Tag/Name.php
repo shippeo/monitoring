@@ -24,4 +24,9 @@ final class Name
     {
         return $this->name;
     }
+
+    public function equalTo(self $otherName): bool
+    {
+        return (string) $this === (string) $otherName;
+    }
 }

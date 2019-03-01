@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection;
 
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
-use Shippeo\Heimdall\Application\Metric\Factory;
-use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\Tag\GlobalTagFactory;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -28,15 +24,7 @@ final class MonitoringExtension extends Extension
             ->load('services.yml')
         ;
 
-        $container
-            ->register(Factory::class)
-            ->setArguments(
-                [
-                    (new Definition(TagCollection::class, [$config['globalTags']]))
-                        ->setFactory(GlobalTagFactory::class.'::create'),
-                ]
-            )
-        ;
+        $container->setParameter('globalTags', $config['globalTags']);
 
         $container
             ->register(StatsDClient::class)

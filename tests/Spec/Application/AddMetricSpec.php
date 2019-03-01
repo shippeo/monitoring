@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Spec\Shippeo\Heimdall\Application;
 
+use Fake\Tag;
+use Fake\Template as FakeTemplate;
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
 use Shippeo\Heimdall\Application\AddMetric;
-use Shippeo\Heimdall\Application\Metric\Factory;
-use Shippeo\Heimdall\Application\Metric\Template\Template;
+use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Domain\Database\Database;
-use Shippeo\Heimdall\Domain\Metric\Metric;
+use Shippeo\Heimdall\Domain\Metric\Counter;
+use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
+use Shippeo\Heimdall\Domain\Metric\Template\Template;
 
 final class AddMetricSpec extends ObjectBehavior
 {
-    function let(Factory $factory)
+    function let()
     {
-        $this->beConstructedWith([], $factory);
+        $this->beConstructedWith([], new TagCollection([]));
     }
 
     function it_is_initializable()
@@ -23,17 +27,53 @@ final class AddMetricSpec extends ObjectBehavior
         $this->shouldHaveType(AddMetric::class);
     }
 
-    function it_invokes_save_metric(
-        Database $database,
-        Factory $factory,
-        Template $template,
-        Metric $metric
-    ) {
-        $this->beConstructedWith([$database->getWrappedObject()], $factory);
+    function it_invokes_save_metric_with_a_counter(Database $database)
+    {
+        $template = new FakeTemplate\Counter();
+        $tags = new TagCollection([new Tag\Tag1(), new Tag\Tag2()]);
 
-        $factory->create($template)->willReturn($metric);
-        $database->store($metric)->shouldBeCalled();
+        $this->beConstructedWith([$database->getWrappedObject()], new TagCollection([]));
 
-        $this->__invoke($template);
+        $database
+            ->store(
+                Argument::exact(
+                    new Counter($template->name(), $template->value(), $tags->getIterator())
+                )
+            )
+            ->shouldBeCalled()
+        ;
+
+        $this->__invoke($template, $tags);
+    }
+
+    function it_invokes_save_metric_with_global_tags(Database $database)
+    {
+        $template = new FakeTemplate\Counter();
+        $tags = new TagCollection([new Tag\Tag1(), new Tag\Tag2()]);
+
+        $globalTags = new TagCollection([new Tag()]);
+        $this->beConstructedWith([$database->getWrappedObject()], $globalTags);
+
+        $database
+            ->store(
+                Argument::exact(
+                    new Counter(
+                        $template->name(),
+                        $template->value(),
+                        $tags->mergeWith($globalTags)->getIterator()
+                    )
+                )
+            )
+            ->shouldBeCalled()
+        ;
+
+        $this->__invoke($template, $tags);
+    }
+
+    function it_throws_an_exception_when_template_is_not_mapped(Template $template)
+    {
+        $template->tags()->willReturn(new NameIterator([]));
+
+        $this->shouldThrow(\LogicException::class)->during('__invoke', [$template, new TagCollection([])]);
     }
 }

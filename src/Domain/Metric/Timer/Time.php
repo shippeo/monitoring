@@ -23,4 +23,9 @@ final class Time
     {
         return $this->time * 1000;
     }
+
+    public function asMicroseconds(): float
+    {
+        return $this->time;
+    }
 }

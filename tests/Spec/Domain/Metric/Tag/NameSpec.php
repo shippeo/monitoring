@@ -50,4 +50,19 @@ final class NameSpec extends ObjectBehavior
 
         $this->shouldThrow(\InvalidArgumentException::class)->duringInstantiation();
     }
+
+    function it_returns_true_when_equals()
+    {
+        $value = 'fakeValue';
+        $this->beConstructedWith($value);
+
+        $this->equalTo(new Name($value))->shouldBe(true);
+    }
+
+    function it_returns_false_when_not_equals()
+    {
+        $this->beConstructedWith('fakeValue');
+
+        $this->equalTo(new Name('notTheSameValue'))->shouldBe(false);
+    }
 }
