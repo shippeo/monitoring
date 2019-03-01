@@ -7,12 +7,8 @@ namespace Functional\Bridge\Symfony;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
-use Shippeo\Heimdall\Application\Metric\Factory;
-use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\MonitoringExtension;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\Tag\GlobalTagFactory;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @internal
@@ -40,14 +36,6 @@ final class ExtensionTest extends AbstractExtensionTestCase
                 ],
                 'globalTags' => $this->globalTags,
             ]
-        );
-
-        $this->assertContainerBuilderHasService(Factory::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
-            Factory::class,
-            0,
-            (new Definition(TagCollection::class, [$this->globalTags]))
-                ->setFactory(GlobalTagFactory::class.'::create')
         );
 
         $this->assertContainerBuilderHasService(StatsD::class);

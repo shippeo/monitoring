@@ -16,7 +16,7 @@ interface Metric
     /**
      * The value to associate.
      *
-     * @return string|int|float
+     * @return float|int|string
      */
     public function value();
 

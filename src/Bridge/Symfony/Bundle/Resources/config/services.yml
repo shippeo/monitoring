@@ -10,4 +10,12 @@ services:
     Shippeo\Heimdall\Application\AddMetric:
         arguments:
             - !tagged monitoring.database
+            - !service
+                class: TagCollection
+                factory:
+                    - !service
+                        class: Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection\Tag\GlobalTagFactory
+                    - create
+                arguments:
+                    - '%globalTags%'
         public: true

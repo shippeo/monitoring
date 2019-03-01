@@ -4,37 +4,11 @@ declare(strict_types=1);
 
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template;
 
-use Shippeo\Heimdall\Application\Metric\Tag\Endpoint;
-use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
-use Shippeo\Heimdall\Application\Metric\Template\Template;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP as HTTPTag;
-use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\Metric\Tag;
-use Shippeo\Heimdall\Domain\Model\StandardUser;
-use Shippeo\Heimdall\Domain\Model\User;
+use Shippeo\Heimdall\Domain\Metric\Template\Counter;
 
-final class Response implements Template
+final class Response implements Counter
 {
-    /** @var StatusCode */
-    private $statusCode;
-    /** @var null|User */
-    private $user;
-    /** @var null|string */
-    private $endpoint;
-
-    public function __construct(StatusCode $statusCode, ?User $user, ?string $endpoint)
-    {
-        $this->statusCode = $statusCode;
-        $this->user = $user;
-        $this->endpoint = $endpoint;
-    }
-
-    public function type(): string
-    {
-        return Counter::class;
-    }
-
     public function name(): string
     {
         return 'api.response';
@@ -45,16 +19,14 @@ final class Response implements Template
         return 1;
     }
 
-    public function tags(): TagCollection
+    public function tags(): Tag\NameIterator
     {
-        return new TagCollection(
+        return new Tag\NameIterator(
             [
-                new Endpoint((string) $this->endpoint),
-                new HTTPTag\StatusCode($this->statusCode),
-                new Tag\User(($this->user !== null) ? $this->user->id() : null),
-                new Tag\Organization(
-                    ($this->user instanceof StandardUser) ? $this->user->organization()->id() : null
-                ),
+                new Tag\Name('endpoint'),
+                new Tag\Name('status_code'),
+                new Tag\Name('user'),
+                new Tag\Name('organization'),
             ]
         );
     }

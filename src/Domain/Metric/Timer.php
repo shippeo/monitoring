@@ -18,8 +18,12 @@ final class Timer implements Metric
     /** @var TagIterator */
     private $tags;
 
-    public function __construct(string $key, Time $start, Time $end, TagIterator $tags)
-    {
+    public function __construct(
+        string $key,
+        Time $start,
+        Time $end,
+        TagIterator $tags
+    ) {
         $this->key = $key;
         $this->start = $start;
         $this->end = $end;
@@ -41,7 +45,7 @@ final class Timer implements Metric
      */
     public function value(): float
     {
-        return \round($this->end->asMilliseconds() - $this->start->asMilliseconds(), 4);
+        return $this->end->asMilliseconds() - $this->start->asMilliseconds();
     }
 
     /**
@@ -51,5 +55,4 @@ final class Timer implements Metric
     {
         return $this->tags;
     }
-
 }

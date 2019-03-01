@@ -49,8 +49,8 @@ final class RequestTest extends WebTestCase
                     new Tag\TagIterator(
                         [
                             new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
-                            new Tag\Organization(null),
-                            new Tag\User(null),
+                            new Tag\NullTag(new Tag\Name('organization')),
+                            new Tag\NullTag(new Tag\Name('user')),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
                             new GlobalTag('globalTag2', '2'),
                         ]
@@ -67,8 +67,8 @@ final class RequestTest extends WebTestCase
                         [
                             new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
                             new StatusCode(new Code(Response::HTTP_OK)),
-                            new Tag\User(null),
-                            new Tag\Organization(null),
+                            new Tag\NullTag(new Tag\Name('user')),
+                            new Tag\NullTag(new Tag\Name('organization')),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
                             new GlobalTag('globalTag2', '2'),
                         ]
@@ -98,7 +98,7 @@ final class RequestTest extends WebTestCase
                     new Tag\TagIterator(
                         [
                             new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
-                            new Tag\Organization(null),
+                            new Tag\NullTag(new Tag\Name('organization')),
                             new Tag\User($user->id()),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
                             new GlobalTag('globalTag2', '2'),
@@ -117,7 +117,7 @@ final class RequestTest extends WebTestCase
                             new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
                             new StatusCode(new Code(Response::HTTP_OK)),
                             new Tag\User($user->id()),
-                            new Tag\Organization(null),
+                            new Tag\NullTag(new Tag\Name('organization')),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
                             new GlobalTag('globalTag2', '2'),
                         ]

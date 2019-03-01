@@ -96,6 +96,7 @@ final class TagCollectionSpec extends ObjectBehavior
         $this->offsetExists($offset)->shouldBe(false);
         $this->offsetSet($offset, $tag);
         $this->offsetExists($offset)->shouldBe(true);
+        $this->offsetGet($offset)->shouldBe($tag);
         $this->offsetUnset($offset);
         $this->offsetExists($offset)->shouldBe(false);
     }
