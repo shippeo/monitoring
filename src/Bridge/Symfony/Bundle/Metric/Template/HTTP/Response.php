@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template;
+namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP;
 
 use Shippeo\Heimdall\Domain\Metric\Tag;
 use Shippeo\Heimdall\Domain\Metric\Template\Counter;

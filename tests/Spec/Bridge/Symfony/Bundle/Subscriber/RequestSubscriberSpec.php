@@ -14,8 +14,7 @@ use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode as Code;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP\StatusCode;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Request;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Response;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP as HTTPTemplate;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Subscriber\RequestSubscriber;
 use Shippeo\Heimdall\Domain\Database\Database;
@@ -23,6 +22,7 @@ use Shippeo\Heimdall\Domain\Metric\Counter;
 use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 use Shippeo\Heimdall\Domain\Metric\Tag\NullTag;
 use Shippeo\Heimdall\Domain\Metric\Tag\Organization;
+use Shippeo\Heimdall\Domain\Metric\Timer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -60,7 +60,8 @@ final class RequestSubscriberSpec extends ObjectBehavior
             ->shouldBe(
                 [
                     KernelEvents::REQUEST => [
-                        ['onRequest', 0],
+                        ['onRequest', 1000],
+                        ['onRequestPostAuthentication', 0],
                     ],
                     KernelEvents::RESPONSE => [
                         ['onResponse', 0],
@@ -78,7 +79,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
     ) {
         $endpoint = 'fakeEndpoint';
         $user = new User();
-        $template = new Request();
+        $template = new HTTPTemplate\Request();
 
         $event->getRequest()->willReturn($request);
         $request->get('_route')->willReturn($endpoint);
@@ -108,7 +109,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
             ->shouldBeCalled()
         ;
 
-        $this->onRequest($event);
+        $this->onRequestPostAuthentication($event);
     }
 
     function it_sends_a_request_metric_without_a_user(
@@ -118,7 +119,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
         HttpFoundation\Request $request
     ) {
         $endpoint = 'fakeEndpoint';
-        $template = new Request();
+        $template = new HTTPTemplate\Request();
 
         $event->getRequest()->willReturn($request);
         $request->get('_route')->willReturn($endpoint);
@@ -148,7 +149,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
             ->shouldBeCalled()
         ;
 
-        $this->onRequest($event);
+        $this->onRequestPostAuthentication($event);
     }
 
     function it_sends_a_request_metric_with_a_standard_user(
@@ -159,7 +160,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
     ) {
         $endpoint = 'fakeEndpoint';
         $user = new StandardUser();
-        $template = new Request();
+        $template = new HTTPTemplate\Request();
 
         $event->getRequest()->willReturn($request);
         $request->get('_route')->willReturn($endpoint);
@@ -189,7 +190,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
             ->shouldBeCalled()
         ;
 
-        $this->onRequest($event);
+        $this->onRequestPostAuthentication($event);
     }
 
     function it_sends_a_response_metric(
@@ -197,12 +198,13 @@ final class RequestSubscriberSpec extends ObjectBehavior
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
-        HttpFoundation\Response $response
+        HttpFoundation\Response $response,
+        GetResponseEvent $requestEvent
     ) {
         $statusCode = new Code(123);
         $user = new User();
         $endpoint = 'fakeEndpoint';
-        $template = new Response();
+        $template = new HTTPTemplate\Response();
 
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
@@ -234,7 +236,12 @@ final class RequestSubscriberSpec extends ObjectBehavior
             )
             ->shouldBeCalled()
         ;
+        $database
+            ->store(Argument::type(Timer::class))
+            ->shouldBeCalled()
+        ;
 
+        $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 
@@ -243,11 +250,12 @@ final class RequestSubscriberSpec extends ObjectBehavior
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
-        HttpFoundation\Response $response
+        HttpFoundation\Response $response,
+        GetResponseEvent $requestEvent
     ) {
         $statusCode = new Code(123);
         $user = new User();
-        $template = new Response();
+        $template = new HTTPTemplate\Response();
 
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
@@ -279,7 +287,12 @@ final class RequestSubscriberSpec extends ObjectBehavior
             )
             ->shouldBeCalled()
         ;
+        $database
+            ->store(Argument::type(Timer::class))
+            ->shouldBeCalled()
+        ;
 
+        $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 
@@ -288,11 +301,12 @@ final class RequestSubscriberSpec extends ObjectBehavior
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
-        HttpFoundation\Response $response
+        HttpFoundation\Response $response,
+        GetResponseEvent $requestEvent
     ) {
         $statusCode = new Code(123);
         $endpoint = 'fakeEndpoint';
-        $template = new Response();
+        $template = new HTTPTemplate\Response();
 
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
@@ -324,7 +338,12 @@ final class RequestSubscriberSpec extends ObjectBehavior
             )
             ->shouldBeCalled()
         ;
+        $database
+            ->store(Argument::type(Timer::class))
+            ->shouldBeCalled()
+        ;
 
+        $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 
@@ -333,12 +352,13 @@ final class RequestSubscriberSpec extends ObjectBehavior
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
-        HttpFoundation\Response $response
+        HttpFoundation\Response $response,
+        GetResponseEvent $requestEvent
     ) {
         $statusCode = new Code(123);
         $user = new StandardUser();
         $endpoint = 'fakeEndpoint';
-        $template = new Response();
+        $template = new HTTPTemplate\Response();
 
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
@@ -370,7 +390,12 @@ final class RequestSubscriberSpec extends ObjectBehavior
             )
             ->shouldBeCalled()
         ;
+        $database
+            ->store(Argument::type(Timer::class))
+            ->shouldBeCalled()
+        ;
 
+        $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 }
