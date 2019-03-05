@@ -10,6 +10,9 @@ extensions:
         format:
             - xml
             - html
+        blacklist:
+            - src/Bridge/Symfony/Bundle/DependencyInjection
+            - src/Infrastructure
         output:
             xml: coverage/phpspec-coverage-xml
             html: coverage/phpspec-coverage-html
