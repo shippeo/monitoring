@@ -13,7 +13,7 @@ use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
 use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Request;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\Request;
 use Shippeo\Heimdall\Domain\Metric\Tag;
 
 /**

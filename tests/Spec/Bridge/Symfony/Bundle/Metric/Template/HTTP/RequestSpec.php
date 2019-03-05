@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template;
+namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP;
 
 use PhpSpec\ObjectBehavior;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Request;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\Request;
 use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
 use Shippeo\Heimdall\Domain\Metric\Template\Counter;

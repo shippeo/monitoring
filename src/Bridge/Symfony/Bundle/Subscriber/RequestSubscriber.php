@@ -9,11 +9,11 @@ use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP\StatusCode as StatusCodeTag;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Request;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Response;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP as HTTPTemplate;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Shippeo\Heimdall\Domain\Metric\Tag\Organization;
 use Shippeo\Heimdall\Domain\Metric\Tag\User;
+use Shippeo\Heimdall\Domain\Metric\Timer\Time;
 use Shippeo\Heimdall\Domain\Model\StandardUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -28,6 +28,9 @@ class RequestSubscriber implements EventSubscriberInterface
     /** @var UserProvider */
     private $userProvider;
 
+    /** @var Time */
+    private $startTime;
+
     public function __construct(AddMetric $addMetric, UserProvider $userProvider)
     {
         $this->addMetric = $addMetric;
@@ -41,7 +44,8 @@ class RequestSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                ['onRequest', 0],
+                ['onRequest', 1000],
+                ['onRequestPostAuthentication', 0],
             ],
             KernelEvents::RESPONSE => [
                 ['onResponse', 0],
@@ -51,11 +55,16 @@ class RequestSubscriber implements EventSubscriberInterface
 
     public function onRequest(GetResponseEvent $event): void
     {
+        $this->startTime = Time::now();
+    }
+
+    public function onRequestPostAuthentication(GetResponseEvent $event): void
+    {
         $tags = new TagCollection([]);
         $this->addEndpointTagToCollection($tags, $event->getRequest());
         $this->addUserTagToCollection($tags);
 
-        ($this->addMetric)(new Request(), $tags);
+        ($this->addMetric)(new HTTPTemplate\Request(), $tags);
     }
 
     public function onResponse(FilterResponseEvent $event): void
@@ -70,7 +79,9 @@ class RequestSubscriber implements EventSubscriberInterface
         $this->addEndpointTagToCollection($tags, $event->getRequest());
         $this->addUserTagToCollection($tags);
 
-        ($this->addMetric)(new Response(), $tags);
+        ($this->addMetric)(new HTTPTemplate\Response(), $tags);
+
+        ($this->addMetric)(new HTTPTemplate\Time($this->startTime, Time::now()), $tags);
     }
 
     private function addEndpointTagToCollection(TagCollection $tags, SymfonyRequest $request): void
