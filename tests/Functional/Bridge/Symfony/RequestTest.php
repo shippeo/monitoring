@@ -48,7 +48,7 @@ final class RequestTest extends WebTestCase
                     'api.request',
                     new Tag\TagIterator(
                         [
-                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
                             new Tag\NullTag(new Tag\Name('organization')),
                             new Tag\NullTag(new Tag\Name('user')),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
@@ -65,7 +65,7 @@ final class RequestTest extends WebTestCase
                     'api.response',
                     new Tag\TagIterator(
                         [
-                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
                             new StatusCode(new Code(Response::HTTP_OK)),
                             new Tag\NullTag(new Tag\Name('user')),
                             new Tag\NullTag(new Tag\Name('organization')),
@@ -97,7 +97,7 @@ final class RequestTest extends WebTestCase
                     'api.request',
                     new Tag\TagIterator(
                         [
-                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
                             new Tag\NullTag(new Tag\Name('organization')),
                             new Tag\User($user->id()),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
@@ -114,7 +114,7 @@ final class RequestTest extends WebTestCase
                     'api.response',
                     new Tag\TagIterator(
                         [
-                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
                             new StatusCode(new Code(Response::HTTP_OK)),
                             new Tag\User($user->id()),
                             new Tag\NullTag(new Tag\Name('organization')),
@@ -146,7 +146,7 @@ final class RequestTest extends WebTestCase
                     'api.request',
                     new Tag\TagIterator(
                         [
-                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
                             new Tag\Organization($user->organization()->id()),
                             new Tag\User($user->id()),
                             new GlobalTag('globalTag1', 'globalTagValue1'),
@@ -163,7 +163,7 @@ final class RequestTest extends WebTestCase
                     'api.response',
                     new Tag\TagIterator(
                         [
-                            new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint('index'),
+                            new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
                             new StatusCode(new Code(Response::HTTP_OK)),
                             new Tag\User($user->id()),
                             new Tag\Organization($user->organization()->id()),
