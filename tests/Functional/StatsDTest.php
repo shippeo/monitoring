@@ -29,7 +29,7 @@ final class StatsDTest extends TestCase
         $globalTag = new FakeTag();
         $tags = new TagCollection(
             [
-                new \Shippeo\Heimdall\Application\Metric\Tag\Endpoint($endpoint),
+                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint($endpoint),
                 new Tag\Organization($user->organization()->id()),
                 new Tag\User($user->id()),
             ]

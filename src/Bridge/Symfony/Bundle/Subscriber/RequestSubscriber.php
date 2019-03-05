@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Subscriber;
 
 use Shippeo\Heimdall\Application\AddMetric;
-use Shippeo\Heimdall\Application\Metric\Tag\Endpoint;
 use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP\StatusCode as StatusCodeTag;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Request;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Response;
