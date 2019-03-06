@@ -9,4 +9,6 @@ interface Client
     public function increment(Key $key, int $value): void;
 
     public function timing(Key $key, float $time): void;
+
+    public function gauge(Key $key, int $value): void;
 }

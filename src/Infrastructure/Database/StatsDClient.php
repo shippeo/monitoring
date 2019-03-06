@@ -45,4 +45,12 @@ final class StatsDClient implements Client
         } catch (ConnectionException $exception) {
         }
     }
+
+    public function gauge(Key $key, int $value): void
+    {
+        try {
+            $this->client->gauge((string) $key, $value);
+        } catch (ConnectionException $exception) {
+        }
+    }
 }
