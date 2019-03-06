@@ -6,6 +6,7 @@ namespace Shippeo\Heimdall\Application\Database\StatsD;
 
 use Shippeo\Heimdall\Domain\Database\Database;
 use Shippeo\Heimdall\Domain\Metric\Counter;
+use Shippeo\Heimdall\Domain\Metric\Gauge;
 use Shippeo\Heimdall\Domain\Metric\Metric;
 use Shippeo\Heimdall\Domain\Metric\Timer;
 
@@ -26,6 +27,8 @@ final class StatsD implements Database
             $this->client->increment($key, $metric->value());
         } elseif ($metric instanceof Timer) {
             $this->client->timing($key, $metric->value());
+        } elseif ($metric instanceof Gauge) {
+            $this->client->gauge($key, $metric->value());
         } else {
             throw new \LogicException('not implemented yet');
         }

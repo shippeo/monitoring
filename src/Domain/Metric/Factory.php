@@ -29,6 +29,9 @@ final class Factory
         if ($template instanceof Template\Timer) {
             return $this->createTimer($template, $allTags);
         }
+        if ($template instanceof Template\Gauge) {
+            return $this->createGauge($template, $allTags);
+        }
 
         throw new \LogicException('not supported template');
     }
@@ -72,6 +75,15 @@ final class Factory
             $template->name(),
             $template->start(),
             $template->end(),
+            $tags
+        );
+    }
+
+    private function createGauge(Template\Gauge $template, TagIterator $tags): Gauge
+    {
+        return new Gauge(
+            $template->name(),
+            $template->value(),
             $tags
         );
     }

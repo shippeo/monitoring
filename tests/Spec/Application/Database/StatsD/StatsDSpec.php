@@ -12,6 +12,7 @@ use Shippeo\Heimdall\Application\Database\StatsD\Key;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
 use Shippeo\Heimdall\Domain\Database\Database;
 use Shippeo\Heimdall\Domain\Metric\Counter;
+use Shippeo\Heimdall\Domain\Metric\Gauge;
 use Shippeo\Heimdall\Domain\Metric\Metric;
 use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
 use Shippeo\Heimdall\Domain\Metric\Timer;
@@ -33,7 +34,7 @@ final class StatsDSpec extends ObjectBehavior
         $this->shouldImplement(Database::class);
     }
 
-    function it_throws_a_logic_exception_if_metric_is_not_a_counter(Metric $metric)
+    function it_throws_a_logic_exception_if_metric_is_not_supported(Metric $metric)
     {
         $metric->key()->willReturn('fakeKey');
         $metric->tags()->willReturn(new TagIterator([]));
@@ -65,6 +66,21 @@ final class StatsDSpec extends ObjectBehavior
 
         $client
             ->timing(
+                Argument::exact(new Key($metric->key(), $metric->tags())),
+                $metric->value()
+            )
+            ->shouldBeCalledOnce()
+        ;
+
+        $this->store($metric);
+    }
+
+    function it_stores_a_gauge_metric(Client $client)
+    {
+        $metric = new Gauge('fakeKey', 1, new TagIterator([new Tag()]));
+
+        $client
+            ->gauge(
                 Argument::exact(new Key($metric->key(), $metric->tags())),
                 $metric->value()
             )
