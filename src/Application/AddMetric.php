@@ -10,7 +10,7 @@ use Shippeo\Heimdall\Domain\Metric\Factory;
 use Shippeo\Heimdall\Domain\Metric\Template\Template;
 use Shippeo\Heimdall\Domain\SaveMetric;
 
-final class AddMetric
+class AddMetric
 {
     /** @var SaveMetric */
     private $saveMetric;
