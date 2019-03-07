@@ -3,4 +3,4 @@
 var
 vendor
 
-coverage
+coverage/**
