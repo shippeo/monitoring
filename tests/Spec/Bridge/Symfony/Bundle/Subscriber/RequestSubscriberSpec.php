@@ -188,6 +188,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
         );
         $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
         $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -218,6 +219,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
         );
         $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
         $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -248,6 +250,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
         );
         $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
         $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -282,6 +285,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
         );
         $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
         $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);

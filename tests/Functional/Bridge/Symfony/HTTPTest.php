@@ -86,6 +86,13 @@ final class HTTPTest extends WebTestCase
             )
             ->shouldBeCalled()
         ;
+        $statsDClient
+            ->gauge(
+                Argument::exact(new Key('api.memory_peak', $endTags)),
+                Argument::type('int')
+            )
+            ->shouldBeCalled()
+        ;
 
         $this->client->request('GET', '/');
 
@@ -144,6 +151,13 @@ final class HTTPTest extends WebTestCase
             )
             ->shouldBeCalled()
         ;
+        $statsDClient
+            ->gauge(
+                Argument::exact(new Key('api.memory_peak', $endTags)),
+                Argument::type('int')
+            )
+            ->shouldBeCalled()
+        ;
 
         $this->client->request('GET', '/');
 
@@ -190,12 +204,7 @@ final class HTTPTest extends WebTestCase
         );
         $statsDClient
             ->increment(
-                Argument::exact(
-                    new Key(
-                        'api.response',
-                        $endTags
-                    )
-                ),
+                Argument::exact(new Key('api.response', $endTags)),
                 1
             )
             ->shouldBeCalled()
@@ -204,6 +213,13 @@ final class HTTPTest extends WebTestCase
             ->timing(
                 Argument::exact(new Key('api.time', $endTags)),
                 Argument::type('float')
+            )
+            ->shouldBeCalled()
+        ;
+        $statsDClient
+            ->gauge(
+                Argument::exact(new Key('api.memory_peak', $endTags)),
+                Argument::type('int')
             )
             ->shouldBeCalled()
         ;

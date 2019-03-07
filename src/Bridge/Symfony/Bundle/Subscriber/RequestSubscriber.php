@@ -82,6 +82,8 @@ class RequestSubscriber implements EventSubscriberInterface
         ($this->addMetric)(new HTTPTemplate\Response(), $tags);
 
         ($this->addMetric)(new HTTPTemplate\Time($this->startTime, Time::now()), $tags);
+
+        ($this->addMetric)(new HTTPTemplate\MemoryPeak(\memory_get_peak_usage(true)), $tags);
     }
 
     private function addEndpointTagToCollection(TagCollection $tags, SymfonyRequest $request): void
