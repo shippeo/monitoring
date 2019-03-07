@@ -31,17 +31,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class RequestSubscriberSpec extends ObjectBehavior
 {
-    /** @var TagCollection */
-    private $globalTags;
-
-    function let(Database $database, UserProvider $userProvider)
+    function let(AddMetric $addMetric, UserProvider $userProvider)
     {
-        $this->globalTags = new TagCollection([new Tag\Tag1(), new Tag\Tag2()]);
-
-        $this->beConstructedWith(
-            new AddMetric([$database->getWrappedObject()], $this->globalTags),
-            $userProvider
-        );
+        $this->beConstructedWith($addMetric, $userProvider);
     }
 
     function it_is_initializable()
@@ -72,7 +64,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
     }
 
     function it_sends_a_request_metric(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         GetResponseEvent $event,
         HttpFoundation\Request $request
@@ -86,23 +78,15 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn($user);
 
-        $database
-            ->store(
+        $addMetric
+            ->__invoke(
+                Argument::exact($template),
                 Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                            new TagCollection(
-                                [
-                                    new Endpoint($endpoint),
-                                    new NullTag(new Name('organization')),
-                                    new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                                ]
-                            )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
+                    new TagCollection(
+                        [
+                            new Endpoint($endpoint),
+                            new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+                        ]
                     )
                 )
             )
@@ -113,7 +97,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
     }
 
     function it_sends_a_request_metric_without_a_user(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         GetResponseEvent $event,
         HttpFoundation\Request $request
@@ -126,23 +110,14 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn(null);
 
-        $database
-            ->store(
+        $addMetric
+            ->__invoke(
+                Argument::exact($template),
                 Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                            new TagCollection(
-                                [
-                                    new Endpoint($endpoint),
-                                    new NullTag(new Name('organization')),
-                                    new NullTag(new Name('user')),
-                                ]
-                            )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
+                    new TagCollection(
+                        [
+                            new Endpoint($endpoint),
+                        ]
                     )
                 )
             )
@@ -153,7 +128,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
     }
 
     function it_sends_a_request_metric_with_a_standard_user(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         GetResponseEvent $event,
         HttpFoundation\Request $request
@@ -167,23 +142,16 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn($user);
 
-        $database
-            ->store(
+        $addMetric
+            ->__invoke(
+                Argument::exact($template),
                 Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                        new TagCollection(
-                            [
-                                new Endpoint($endpoint),
-                                new Organization($user->organization()->id()),
-                                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                            ]
-                        )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
+                    new TagCollection(
+                        [
+                            new Endpoint($endpoint),
+                            new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+                            new Organization($user->organization()->id()),
+                        ]
                     )
                 )
             )
@@ -194,7 +162,7 @@ final class RequestSubscriberSpec extends ObjectBehavior
     }
 
     function it_sends_a_response_metric(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
@@ -204,8 +172,6 @@ final class RequestSubscriberSpec extends ObjectBehavior
         $statusCode = new Code(123);
         $user = new User();
         $endpoint = 'fakeEndpoint';
-        $template = new HTTPTemplate\Response();
-
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
         $request->get('_route')->willReturn($endpoint);
@@ -213,40 +179,22 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn($user);
 
-        $database
-            ->store(
-                Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                            new TagCollection(
-                                [
-                                    new Endpoint($endpoint),
-                                    new StatusCode($statusCode),
-                                    new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                                    new NullTag(new Name('organization')),
-                                ]
-                            )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-        $database
-            ->store(Argument::type(Timer::class))
-            ->shouldBeCalled()
-        ;
+        $tags = new TagCollection(
+            [
+                new StatusCode($statusCode),
+                new Endpoint($endpoint),
+                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+            ]
+        );
+        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 
     function it_sends_a_response_metric_without_an_endpoint(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
@@ -255,8 +203,6 @@ final class RequestSubscriberSpec extends ObjectBehavior
     ) {
         $statusCode = new Code(123);
         $user = new User();
-        $template = new HTTPTemplate\Response();
-
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
         $request->get('_route')->willReturn(null);
@@ -264,40 +210,21 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn($user);
 
-        $database
-            ->store(
-                Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                            new TagCollection(
-                                [
-                                    new NullTag(new Name('endpoint')),
-                                    new StatusCode($statusCode),
-                                    new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                                    new NullTag(new Name('organization')),
-                                ]
-                            )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-        $database
-            ->store(Argument::type(Timer::class))
-            ->shouldBeCalled()
-        ;
+        $tags = new TagCollection(
+            [
+                new StatusCode($statusCode),
+                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+            ]
+        );
+        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 
     function it_sends_a_response_metric_without_a_user(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
@@ -306,8 +233,6 @@ final class RequestSubscriberSpec extends ObjectBehavior
     ) {
         $statusCode = new Code(123);
         $endpoint = 'fakeEndpoint';
-        $template = new HTTPTemplate\Response();
-
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
         $request->get('_route')->willReturn($endpoint);
@@ -315,40 +240,21 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn(null);
 
-        $database
-            ->store(
-                Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                            new TagCollection(
-                                [
-                                    new Endpoint($endpoint),
-                                    new StatusCode($statusCode),
-                                    new NullTag(new Name('user')),
-                                    new NullTag(new Name('organization')),
-                                ]
-                            )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-        $database
-            ->store(Argument::type(Timer::class))
-            ->shouldBeCalled()
-        ;
+        $tags = new TagCollection(
+            [
+                new StatusCode($statusCode),
+                new Endpoint($endpoint),
+            ]
+        );
+        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
     }
 
     function it_sends_a_response_metric_with_a_standard_user(
-        Database $database,
+        AddMetric $addMetric,
         UserProvider $userProvider,
         FilterResponseEvent $event,
         HttpFoundation\Request $request,
@@ -358,7 +264,6 @@ final class RequestSubscriberSpec extends ObjectBehavior
         $statusCode = new Code(123);
         $user = new StandardUser();
         $endpoint = 'fakeEndpoint';
-        $template = new HTTPTemplate\Response();
 
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
@@ -367,33 +272,16 @@ final class RequestSubscriberSpec extends ObjectBehavior
 
         $userProvider->connectedUser()->willReturn($user);
 
-        $database
-            ->store(
-                Argument::exact(
-                    new Counter(
-                        $template->name(),
-                        $template->value(),
-                        (
-                            new TagCollection(
-                                [
-                                    new Endpoint($endpoint),
-                                    new StatusCode($statusCode),
-                                    new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                                    new Organization($user->organization()->id()),
-                                ]
-                            )
-                        )
-                            ->mergeWith($this->globalTags)
-                            ->getIterator()
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-        $database
-            ->store(Argument::type(Timer::class))
-            ->shouldBeCalled()
-        ;
+        $tags = new TagCollection(
+            [
+                new StatusCode($statusCode),
+                new Endpoint($endpoint),
+                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+                new Organization($user->organization()->id()),
+            ]
+        );
+        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
+        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
