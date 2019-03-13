@@ -26,6 +26,6 @@ final class Time
 
     public function asMicroseconds(): float
     {
-        return $this->time;
+        return $this->asMilliseconds() * 1000;
     }
 }

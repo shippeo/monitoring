@@ -10,6 +10,7 @@
         "webmozart/assert": "^1.4"
     },
     "require-dev": {
+        "doctrine/doctrine-bundle": "^1.10",
         "friendsofphp/php-cs-fixer": "^2.14",
         "infection/infection": "^0.12.2",
         "jangregor/phpstan-prophecy": "^0.3.0",
@@ -25,6 +26,10 @@
         "symfony/browser-kit": "^4.2",
         "symfony/framework-bundle": "^3.4 || ^4.0",
         "thecodingmachine/phpstan-safe-rule": "^0.1"
+    },
+    "suggest": {
+        "symfony/framework-bundle": "Needed to use the symfony bridge",
+        "doctrine/doctrine-bundle": "Allow to monitor database activity for your application"
     },
     "autoload": {
         "psr-4": {

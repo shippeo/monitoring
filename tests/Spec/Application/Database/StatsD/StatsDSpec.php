@@ -62,7 +62,7 @@ final class StatsDSpec extends ObjectBehavior
 
     function it_stores_a_timer_metric(Client $client)
     {
-        $metric = new Timer('fakeKey', Timer\Time::now(), Timer\Time::now(), new TagIterator([new Tag()]));
+        $metric = new Timer('fakeKey', new Timer\Duration(123456.789123), new TagIterator([new Tag()]));
 
         $client
             ->timing(

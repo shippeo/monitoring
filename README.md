@@ -69,6 +69,9 @@ monitoring:
 
 * Add a service which implements the `Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider` interface.
 
+### Database time
+If you use doctrine and enable the profiling, the bundle will automatically send a metric with the total time spent.
+
 ### Add a metric
 Use the `\Shippeo\Heimdall\Application\AddMetric` service. it is a public service that can directly take a metric.
 

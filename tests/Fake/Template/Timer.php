@@ -6,29 +6,21 @@ namespace Fake\Template;
 
 use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
-use Shippeo\Heimdall\Domain\Metric\Timer\Time;
+use Shippeo\Heimdall\Domain\Metric\Timer\Duration;
 
 final class Timer implements \Shippeo\Heimdall\Domain\Metric\Template\Timer
 {
-    /** @var Time */
-    private $start;
-    /** @var Time */
-    private $end;
+    /** @var Duration */
+    private $duration;
 
     public function __construct()
     {
-        $this->start = Time::now();
-        $this->end = Time::now();
+        $this->duration = new Duration(123456.789198765);
     }
 
-    public function start(): Time
+    public function duration(): Duration
     {
-        return $this->start;
-    }
-
-    public function end(): Time
-    {
-        return $this->end;
+        return $this->duration;
     }
 
     public function name(): string

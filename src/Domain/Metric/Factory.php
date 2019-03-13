@@ -73,8 +73,7 @@ final class Factory
     {
         return new Timer(
             $template->name(),
-            $template->start(),
-            $template->end(),
+            $template->duration(),
             $tags
         );
     }

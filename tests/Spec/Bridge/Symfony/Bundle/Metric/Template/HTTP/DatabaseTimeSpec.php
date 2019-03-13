@@ -5,32 +5,26 @@ declare(strict_types=1);
 namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP;
 
 use PhpSpec\ObjectBehavior;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\Time;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\DatabaseTime;
 use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
 use Shippeo\Heimdall\Domain\Metric\Template\Template;
 use Shippeo\Heimdall\Domain\Metric\Template\Timer;
 use Shippeo\Heimdall\Domain\Metric\Timer\Duration;
-use Shippeo\Heimdall\Domain\Metric\Timer\Time as MetricTime;
 
-final class TimeSpec extends ObjectBehavior
+final class DatabaseTimeSpec extends ObjectBehavior
 {
-    /** @var MetricTime */
-    private $start;
-    /** @var MetricTime */
-    private $end;
+    /** @var float */
+    private $duration = 1234.56789;
 
     function let()
     {
-        $this->start = MetricTime::now();
-        $this->end = MetricTime::now();
-
-        $this->beConstructedWith($this->start, $this->end);
+        $this->beConstructedWith($this->duration);
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(Time::class);
+        $this->shouldHaveType(DatabaseTime::class);
     }
 
     function it_implements_Counter()
@@ -45,14 +39,14 @@ final class TimeSpec extends ObjectBehavior
 
     function it_returns_the_name()
     {
-        $this->name()->shouldBe('api.time');
+        $this->name()->shouldBe('api.database');
     }
 
     function it_returns_the_duration()
     {
         $this
             ->duration()
-            ->shouldBeLike(Duration::fromTimes($this->start, $this->end))
+            ->shouldBeLike(new Duration($this->duration))
         ;
     }
 

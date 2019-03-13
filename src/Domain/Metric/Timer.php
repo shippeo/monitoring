@@ -5,28 +5,21 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Domain\Metric;
 
 use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
-use Shippeo\Heimdall\Domain\Metric\Timer\Time;
+use Shippeo\Heimdall\Domain\Metric\Timer\Duration;
 
 final class Timer implements Metric
 {
     /** @var string */
     private $key;
-    /** @var Time */
-    private $start;
-    /** @var Time */
-    private $end;
+    /** @var Duration */
+    private $duration;
     /** @var TagIterator */
     private $tags;
 
-    public function __construct(
-        string $key,
-        Time $start,
-        Time $end,
-        TagIterator $tags
-    ) {
+    public function __construct(string $key, Duration $duration, TagIterator $tags)
+    {
         $this->key = $key;
-        $this->start = $start;
-        $this->end = $end;
+        $this->duration = $duration;
         $this->tags = $tags;
     }
 
@@ -45,7 +38,7 @@ final class Timer implements Metric
      */
     public function value(): float
     {
-        return $this->end->asMilliseconds() - $this->start->asMilliseconds();
+        return $this->duration->asMilliseconds();
     }
 
     /**

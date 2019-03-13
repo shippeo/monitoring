@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Subscriber;
 
+use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode;
@@ -27,7 +28,8 @@ class RequestSubscriber implements EventSubscriberInterface
     private $addMetric;
     /** @var UserProvider */
     private $userProvider;
-
+    /** @var null|DoctrineDataCollector */
+    private $doctrineDataCollector;
     /** @var Time */
     private $startTime;
 
@@ -51,6 +53,11 @@ class RequestSubscriber implements EventSubscriberInterface
                 ['onResponse', 0],
             ],
         ];
+    }
+
+    public function addDoctrineDataCollector(DoctrineDataCollector $dataCollector): void
+    {
+        $this->doctrineDataCollector = $dataCollector;
     }
 
     public function onRequest(GetResponseEvent $event): void
@@ -84,6 +91,11 @@ class RequestSubscriber implements EventSubscriberInterface
         ($this->addMetric)(new HTTPTemplate\Time($this->startTime, Time::now()), $tags);
 
         ($this->addMetric)(new HTTPTemplate\MemoryPeak(\memory_get_peak_usage(true)), $tags);
+
+        if ($this->doctrineDataCollector !== null) {
+            $this->doctrineDataCollector->collect($event->getRequest(), $event->getResponse());
+            ($this->addMetric)(new HTTPTemplate\DatabaseTime((float) $this->doctrineDataCollector->getTime()), $tags);
+        }
     }
 
     private function addEndpointTagToCollection(TagCollection $tags, SymfonyRequest $request): void
