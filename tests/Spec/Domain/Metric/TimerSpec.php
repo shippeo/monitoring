@@ -8,26 +8,22 @@ use Fake\Tag;
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
 use Shippeo\Heimdall\Domain\Metric\Timer;
-use Shippeo\Heimdall\Domain\Metric\Timer\Time;
 
 final class TimerSpec extends ObjectBehavior
 {
     /** @var string */
     private $key = 'fakeKey';
-    /** @var Time */
-    private $start;
-    /** @var Time */
-    private $end;
+    /** @var Timer\Duration */
+    private $duration;
     /** @var TagIterator */
     private $tags;
 
     function let()
     {
-        $this->start = Time::now();
-        $this->end = Time::now();
+        $this->duration = new Timer\Duration(123456.0789);
         $this->tags = new TagIterator([new Tag(), new Tag()]);
 
-        $this->beConstructedWith($this->key, $this->start, $this->end, $this->tags);
+        $this->beConstructedWith($this->key, $this->duration, $this->tags);
     }
 
     function it_is_initializable()
@@ -45,7 +41,7 @@ final class TimerSpec extends ObjectBehavior
         $this
             ->value()
             ->shouldBe(
-                $this->end->asMilliseconds() - $this->start->asMilliseconds()
+                $this->duration->asMilliseconds()
             )
         ;
     }

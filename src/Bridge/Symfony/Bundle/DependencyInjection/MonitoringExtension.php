@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\DependencyInjection;
 
+use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Subscriber\RequestSubscriber;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,5 +40,14 @@ final class MonitoringExtension extends Extension
             ->setAutowired(true)
             ->addTag('monitoring.database')
         ;
+
+        if (\class_exists(DoctrineDataCollector::class)
+            && $container->hasDefinition('data_collector.doctrine')
+        ) {
+            $container
+                ->getDefinition(RequestSubscriber::class)
+                ->addMethodCall('addDoctrineDataCollector', [$container->getDefinition('data_collector.doctrine')])
+            ;
+        }
     }
 }

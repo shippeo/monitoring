@@ -101,8 +101,7 @@ final class FactorySpec extends ObjectBehavior
             ->shouldBeLike(
                 new Timer(
                     $template->name(),
-                    $template->start(),
-                    $template->end(),
+                    $template->duration(),
                     new TagIterator(
                         [
                             $tag1,
@@ -125,8 +124,7 @@ final class FactorySpec extends ObjectBehavior
             ->shouldBeLike(
                 new Timer(
                     $template->name(),
-                    $template->start(),
-                    $template->end(),
+                    $template->duration(),
                     new TagIterator(
                         [
                             $tag1,
