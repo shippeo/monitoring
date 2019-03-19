@@ -19,9 +19,14 @@ final class Time
         return new self(\microtime(true));
     }
 
+    public function asSeconds(): float
+    {
+        return $this->time;
+    }
+
     public function asMilliseconds(): float
     {
-        return $this->time * 1000;
+        return $this->asSeconds() * 1000;
     }
 
     public function asMicroseconds(): float

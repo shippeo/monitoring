@@ -6,6 +6,7 @@ namespace Spec\Shippeo\Heimdall\Domain\Metric\Timer;
 
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Domain\Metric\Timer\Duration;
+use Shippeo\Heimdall\Domain\Metric\Timer\Time;
 
 final class DurationSpec extends ObjectBehavior
 {
@@ -33,5 +34,15 @@ final class DurationSpec extends ObjectBehavior
         $this->asMilliseconds()->shouldBe(
             $this->duration * 1000
         );
+    }
+
+    function it_is_initializable_through_times()
+    {
+        $start = Time::now();
+        $end = Time::now();
+
+        $this->beConstructedThrough('fromTimes', [$start, $end]);
+
+        $this->asSeconds()->shouldBe($end->asSeconds() - $start->asSeconds());
     }
 }
