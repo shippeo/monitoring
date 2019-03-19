@@ -23,7 +23,12 @@ final class Duration
 
     public static function fromTimes(Time $start, Time $end): self
     {
-        return new self($end->asMicroseconds() - $start->asMicroseconds());
+        return new self($end->asSeconds() - $start->asSeconds());
+    }
+
+    public function asSeconds(): float
+    {
+        return $this->duration;
     }
 
     public function asMilliseconds(): float

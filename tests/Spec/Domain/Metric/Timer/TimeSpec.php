@@ -31,4 +31,12 @@ final class TimeSpec extends ObjectBehavior
             $this->asMicroseconds()->getWrappedObject() / 1000
         );
     }
+
+    function it_returns_the_current_time_as_seconds()
+    {
+        $this->asSeconds()->shouldBeDouble();
+        $this->asSeconds()->shouldBe(
+            $this->asMilliseconds()->getWrappedObject() / 1000
+        );
+    }
 }
