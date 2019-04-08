@@ -47,7 +47,6 @@ class RequestSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::REQUEST => [
                 ['onRequest', 1000],
-                ['onRequestPostAuthentication', 0],
             ],
             KernelEvents::RESPONSE => [
                 ['onResponse', 0],
@@ -65,15 +64,6 @@ class RequestSubscriber implements EventSubscriberInterface
         $this->startTime = Time::now();
     }
 
-    public function onRequestPostAuthentication(GetResponseEvent $event): void
-    {
-        $tags = new TagCollection([]);
-        $this->addEndpointTagToCollection($tags, $event->getRequest());
-        $this->addUserTagToCollection($tags);
-
-        ($this->addMetric)(new HTTPTemplate\Request(), $tags);
-    }
-
     public function onResponse(FilterResponseEvent $event): void
     {
         $tags = new TagCollection(
@@ -84,17 +74,15 @@ class RequestSubscriber implements EventSubscriberInterface
             ]
         );
         $this->addEndpointTagToCollection($tags, $event->getRequest());
-        $this->addUserTagToCollection($tags);
+        /** @var TagCollection $tagsWithUser */
+        $tagsWithUser = $tags->mergeWith($this->userTags());
 
-        ($this->addMetric)(new HTTPTemplate\Response(), $tags);
-
-        ($this->addMetric)(new HTTPTemplate\Time($this->startTime, Time::now()), $tags);
-
+        ($this->addMetric)(new HTTPTemplate\Time($this->startTime, Time::now()), $tagsWithUser);
         ($this->addMetric)(new HTTPTemplate\MemoryPeak(\memory_get_peak_usage(true)), $tags);
 
         if ($this->doctrineDataCollector !== null) {
             $this->doctrineDataCollector->collect($event->getRequest(), $event->getResponse());
-            ($this->addMetric)(new HTTPTemplate\DatabaseTime((float) $this->doctrineDataCollector->getTime()), $tags);
+            ($this->addMetric)(new HTTPTemplate\DatabaseTime((float) $this->doctrineDataCollector->getTime()), $tagsWithUser);
         }
     }
 
@@ -109,16 +97,18 @@ class RequestSubscriber implements EventSubscriberInterface
         $tags[] = new Endpoint($endpoint);
     }
 
-    private function addUserTagToCollection(TagCollection $tags): void
+    private function userTags(): TagCollection
     {
         $user = $this->userProvider->connectedUser();
         if ($user === null) {
-            return;
+            return new TagCollection([]);
         }
 
-        $tags[] = new User($user->id());
+        $tags = new TagCollection([new User($user->id())]);
         if ($user instanceof StandardUser) {
             $tags[] = new Organization($user->organization()->id());
         }
+
+        return $tags;
     }
 }

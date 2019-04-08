@@ -42,26 +42,6 @@ final class HTTPTest extends WebTestCase
 
         $this->clientContainer()->set(StatsDClient::class, $statsDClient->reveal());
 
-        $statsDClient
-            ->increment(
-                Argument::exact(
-                    new Key(
-                        'api.request',
-                        new Tag\TagIterator(
-                            [
-                                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
-                                new Tag\NullTag(new Tag\Name('organization')),
-                                new Tag\NullTag(new Tag\Name('user')),
-                                new GlobalTag('globalTag1', 'globalTagValue1'),
-                                new GlobalTag('globalTag2', '2'),
-                            ]
-                        )
-                    )
-                ),
-                1
-            )
-            ->shouldBeCalled()
-        ;
         $endTags = new Tag\TagIterator(
             [
                 new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
@@ -73,23 +53,42 @@ final class HTTPTest extends WebTestCase
             ]
         );
         $statsDClient
-            ->increment(
-                Argument::exact(new Key('api.response', $endTags)),
-                1
-            )
-            ->shouldBeCalled()
-        ;
-        $statsDClient
             ->timing(
-                Argument::exact(new Key('api.time', $endTags)),
+                Argument::exact(
+                    new Key(
+                        'http.time',
+                        new Tag\TagIterator(
+                            [
+                                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
+                                new StatusCode(new Code(Response::HTTP_OK)),
+                                new Tag\NullTag(new Tag\Name('user')),
+                                new Tag\NullTag(new Tag\Name('organization')),
+                                new GlobalTag('globalTag1', 'globalTagValue1'),
+                                new GlobalTag('globalTag2', '2'),
+                            ]
+                        )
+                    )
+                ),
                 Argument::type('float')
             )
             ->shouldBeCalled()
         ;
         $statsDClient
             ->gauge(
-                Argument::exact(new Key('api.memory_peak', $endTags)),
-                Argument::type('int')
+                Argument::exact(
+                    new Key(
+                        'http.memory_peak',
+                        new Tag\TagIterator(
+                            [
+                                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
+                                new StatusCode(new Code(Response::HTTP_OK)),
+                                new GlobalTag('globalTag1', 'globalTagValue1'),
+                                new GlobalTag('globalTag2', '2'),
+                            ]
+                        )
+                    )
+                ),
+                Argument::type('float')
             )
             ->shouldBeCalled()
         ;
@@ -108,53 +107,42 @@ final class HTTPTest extends WebTestCase
         $this->clientContainer()->set(StatsDClient::class, $statsDClient->reveal());
 
         $statsDClient
-            ->increment(
+            ->timing(
                 Argument::exact(
                     new Key(
-                        'api.request',
+                        'http.time',
                         new Tag\TagIterator(
                             [
                                 new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
-                                new Tag\NullTag(new Tag\Name('organization')),
+                                new StatusCode(new Code(Response::HTTP_OK)),
                                 new Tag\User($user->id()),
+                                new Tag\NullTag(new Tag\Name('organization')),
                                 new GlobalTag('globalTag1', 'globalTagValue1'),
                                 new GlobalTag('globalTag2', '2'),
                             ]
                         )
                     )
                 ),
-                1
-            )
-            ->shouldBeCalled()
-        ;
-        $endTags = new Tag\TagIterator(
-            [
-                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
-                new StatusCode(new Code(Response::HTTP_OK)),
-                new Tag\User($user->id()),
-                new Tag\NullTag(new Tag\Name('organization')),
-                new GlobalTag('globalTag1', 'globalTagValue1'),
-                new GlobalTag('globalTag2', '2'),
-            ]
-        );
-        $statsDClient
-            ->increment(
-                Argument::exact(new Key('api.response', $endTags)),
-                1
-            )
-            ->shouldBeCalled()
-        ;
-        $statsDClient
-            ->timing(
-                Argument::exact(new Key('api.time', $endTags)),
                 Argument::type('float')
             )
             ->shouldBeCalled()
         ;
         $statsDClient
             ->gauge(
-                Argument::exact(new Key('api.memory_peak', $endTags)),
-                Argument::type('int')
+                Argument::exact(
+                    new Key(
+                        'http.memory_peak',
+                        new Tag\TagIterator(
+                            [
+                                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
+                                new StatusCode(new Code(Response::HTTP_OK)),
+                                new GlobalTag('globalTag1', 'globalTagValue1'),
+                                new GlobalTag('globalTag2', '2'),
+                            ]
+                        )
+                    )
+                ),
+                Argument::type('float')
             )
             ->shouldBeCalled()
         ;
@@ -173,53 +161,42 @@ final class HTTPTest extends WebTestCase
         $this->clientContainer()->set(StatsDClient::class, $statsDClient->reveal());
 
         $statsDClient
-            ->increment(
+            ->timing(
                 Argument::exact(
                     new Key(
-                        'api.request',
+                        'http.time',
                         new Tag\TagIterator(
                             [
                                 new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
-                                new Tag\Organization($user->organization()->id()),
+                                new StatusCode(new Code(Response::HTTP_OK)),
                                 new Tag\User($user->id()),
+                                new Tag\Organization($user->organization()->id()),
                                 new GlobalTag('globalTag1', 'globalTagValue1'),
                                 new GlobalTag('globalTag2', '2'),
                             ]
                         )
                     )
                 ),
-                1
-            )
-            ->shouldBeCalled()
-        ;
-        $endTags = new Tag\TagIterator(
-            [
-                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
-                new StatusCode(new Code(Response::HTTP_OK)),
-                new Tag\User($user->id()),
-                new Tag\Organization($user->organization()->id()),
-                new GlobalTag('globalTag1', 'globalTagValue1'),
-                new GlobalTag('globalTag2', '2'),
-            ]
-        );
-        $statsDClient
-            ->increment(
-                Argument::exact(new Key('api.response', $endTags)),
-                1
-            )
-            ->shouldBeCalled()
-        ;
-        $statsDClient
-            ->timing(
-                Argument::exact(new Key('api.time', $endTags)),
                 Argument::type('float')
             )
             ->shouldBeCalled()
         ;
         $statsDClient
             ->gauge(
-                Argument::exact(new Key('api.memory_peak', $endTags)),
-                Argument::type('int')
+                Argument::exact(
+                    new Key(
+                        'http.memory_peak',
+                        new Tag\TagIterator(
+                            [
+                                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
+                                new StatusCode(new Code(Response::HTTP_OK)),
+                                new GlobalTag('globalTag1', 'globalTagValue1'),
+                                new GlobalTag('globalTag2', '2'),
+                            ]
+                        )
+                    )
+                ),
+                Argument::type('float')
             )
             ->shouldBeCalled()
         ;

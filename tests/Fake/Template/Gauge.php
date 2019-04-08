@@ -9,9 +9,9 @@ use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
 
 final class Gauge implements \Shippeo\Heimdall\Domain\Metric\Template\Gauge
 {
-    public function value(): int
+    public function value(): float
     {
-        return 123;
+        return 123.45;
     }
 
     public function name(): string

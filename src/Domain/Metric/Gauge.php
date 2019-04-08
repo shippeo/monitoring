@@ -10,12 +10,12 @@ final class Gauge implements Metric
 {
     /** @var string */
     private $key;
-    /** @var int */
+    /** @var float */
     private $value;
     /** @var TagIterator */
     private $tags;
 
-    public function __construct(string $key, int $value, TagIterator $tags)
+    public function __construct(string $key, float $value, TagIterator $tags)
     {
         $this->key = $key;
         $this->value = $value;
@@ -27,7 +27,7 @@ final class Gauge implements Metric
         return $this->key;
     }
 
-    public function value(): int
+    public function value(): float
     {
         return $this->value;
     }

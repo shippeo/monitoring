@@ -6,5 +6,5 @@ namespace Shippeo\Heimdall\Domain\Metric\Template;
 
 interface Gauge extends Template
 {
-    public function value(): int;
+    public function value(): float;
 }

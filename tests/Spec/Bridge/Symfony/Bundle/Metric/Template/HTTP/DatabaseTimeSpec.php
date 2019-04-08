@@ -8,8 +8,8 @@ use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\DatabaseTime;
 use Shippeo\Heimdall\Domain\Metric\Tag\Name;
 use Shippeo\Heimdall\Domain\Metric\Tag\NameIterator;
+use Shippeo\Heimdall\Domain\Metric\Template\Gauge;
 use Shippeo\Heimdall\Domain\Metric\Template\Template;
-use Shippeo\Heimdall\Domain\Metric\Template\Timer;
 use Shippeo\Heimdall\Domain\Metric\Timer\Duration;
 
 final class DatabaseTimeSpec extends ObjectBehavior
@@ -27,9 +27,9 @@ final class DatabaseTimeSpec extends ObjectBehavior
         $this->shouldHaveType(DatabaseTime::class);
     }
 
-    function it_implements_Counter()
+    function it_implements_Gauge()
     {
-        $this->shouldImplement(Timer::class);
+        $this->shouldImplement(Gauge::class);
     }
 
     function it_implements_Template()
@@ -39,14 +39,14 @@ final class DatabaseTimeSpec extends ObjectBehavior
 
     function it_returns_the_name()
     {
-        $this->name()->shouldBe('api.database');
+        $this->name()->shouldBe('http.database');
     }
 
-    function it_returns_the_duration()
+    function it_returns_the_value()
     {
         $this
-            ->duration()
-            ->shouldBeLike(new Duration($this->duration))
+            ->value()
+            ->shouldBeLike((new Duration($this->duration))->asMilliseconds())
         ;
     }
 

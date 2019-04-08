@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP;
 
 use Shippeo\Heimdall\Domain\Metric\Tag;
-use Shippeo\Heimdall\Domain\Metric\Template\Timer;
+use Shippeo\Heimdall\Domain\Metric\Template\Gauge;
 use Shippeo\Heimdall\Domain\Metric\Timer\Duration;
 
-final class DatabaseTime implements Timer
+final class DatabaseTime implements Gauge
 {
-    /** @var float */
+    /** @var Duration */
     private $duration;
 
-    public function __construct(float $duration)
+    public function __construct(float $durationInSeconds)
     {
-        $this->duration = $duration;
+        $this->duration = new Duration($durationInSeconds);
     }
 
-    public function duration(): Duration
+    public function value(): float
     {
-        return new Duration($this->duration);
+        return $this->duration->asMilliseconds();
     }
 
     public function name(): string
     {
-        return 'api.database';
+        return 'http.database';
     }
 
     public function tags(): Tag\NameIterator

@@ -48,7 +48,6 @@ final class RequestSubscriberSpec extends ObjectBehavior
                 [
                     KernelEvents::REQUEST => [
                         ['onRequest', 1000],
-                        ['onRequestPostAuthentication', 0],
                     ],
                     KernelEvents::RESPONSE => [
                         ['onResponse', 0],
@@ -56,104 +55,6 @@ final class RequestSubscriberSpec extends ObjectBehavior
                 ]
             )
         ;
-    }
-
-    function it_sends_a_request_metric(
-        AddMetric $addMetric,
-        UserProvider $userProvider,
-        GetResponseEvent $event,
-        HttpFoundation\Request $request
-    ) {
-        $endpoint = 'fakeEndpoint';
-        $user = new User();
-        $template = new HTTPTemplate\Request();
-
-        $event->getRequest()->willReturn($request);
-        $request->get('_route')->willReturn($endpoint);
-
-        $userProvider->connectedUser()->willReturn($user);
-
-        $addMetric
-            ->__invoke(
-                Argument::exact($template),
-                Argument::exact(
-                    new TagCollection(
-                        [
-                            new Endpoint($endpoint),
-                            new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                        ]
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-
-        $this->onRequestPostAuthentication($event);
-    }
-
-    function it_sends_a_request_metric_without_a_user(
-        AddMetric $addMetric,
-        UserProvider $userProvider,
-        GetResponseEvent $event,
-        HttpFoundation\Request $request
-    ) {
-        $endpoint = 'fakeEndpoint';
-        $template = new HTTPTemplate\Request();
-
-        $event->getRequest()->willReturn($request);
-        $request->get('_route')->willReturn($endpoint);
-
-        $userProvider->connectedUser()->willReturn(null);
-
-        $addMetric
-            ->__invoke(
-                Argument::exact($template),
-                Argument::exact(
-                    new TagCollection(
-                        [
-                            new Endpoint($endpoint),
-                        ]
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-
-        $this->onRequestPostAuthentication($event);
-    }
-
-    function it_sends_a_request_metric_with_a_standard_user(
-        AddMetric $addMetric,
-        UserProvider $userProvider,
-        GetResponseEvent $event,
-        HttpFoundation\Request $request
-    ) {
-        $endpoint = 'fakeEndpoint';
-        $user = new StandardUser();
-        $template = new HTTPTemplate\Request();
-
-        $event->getRequest()->willReturn($request);
-        $request->get('_route')->willReturn($endpoint);
-
-        $userProvider->connectedUser()->willReturn($user);
-
-        $addMetric
-            ->__invoke(
-                Argument::exact($template),
-                Argument::exact(
-                    new TagCollection(
-                        [
-                            new Endpoint($endpoint),
-                            new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                            new Organization($user->organization()->id()),
-                        ]
-                    )
-                )
-            )
-            ->shouldBeCalled()
-        ;
-
-        $this->onRequestPostAuthentication($event);
     }
 
     function it_sends_a_response_metric(
@@ -178,12 +79,26 @@ final class RequestSubscriberSpec extends ObjectBehavior
             [
                 new StatusCode($statusCode),
                 new Endpoint($endpoint),
-                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
             ]
         );
-        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric
+            ->__invoke(
+                Argument::type(HTTPTemplate\Time::class),
+                Argument::exact(
+                    $tags->mergeWith(
+                        new TagCollection([new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id())])
+                    )
+                )
+            )
+            ->shouldBeCalled()
+        ;
+        $addMetric
+            ->__invoke(
+                Argument::type(HTTPTemplate\MemoryPeak::class),
+                Argument::exact($tags)
+            )
+            ->shouldBeCalled()
+        ;
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -209,12 +124,23 @@ final class RequestSubscriberSpec extends ObjectBehavior
         $tags = new TagCollection(
             [
                 new StatusCode($statusCode),
-                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
             ]
         );
-        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric
+            ->__invoke(
+                Argument::type(HTTPTemplate\Time::class),
+                Argument::exact(
+                    $tags->mergeWith(
+                        new TagCollection([new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id())])
+                    )
+                )
+            )
+            ->shouldBeCalled()
+        ;
+        $addMetric
+            ->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))
+            ->shouldBeCalled()
+        ;
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -243,9 +169,14 @@ final class RequestSubscriberSpec extends ObjectBehavior
                 new Endpoint($endpoint),
             ]
         );
-        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric
+            ->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))
+            ->shouldBeCalled()
+        ;
+        $addMetric
+            ->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))
+            ->shouldBeCalled()
+        ;
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -274,13 +205,28 @@ final class RequestSubscriberSpec extends ObjectBehavior
             [
                 new StatusCode($statusCode),
                 new Endpoint($endpoint),
-                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                new Organization($user->organization()->id()),
             ]
         );
-        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
+        $addMetric
+            ->__invoke(
+                Argument::type(HTTPTemplate\Time::class),
+                Argument::exact(
+                    $tags->mergeWith(
+                        new TagCollection(
+                            [
+                                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+                                new Organization($user->organization()->id()),
+                            ]
+                        )
+                    )
+                )
+            )
+            ->shouldBeCalled()
+        ;
+        $addMetric
+            ->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))
+            ->shouldBeCalled()
+        ;
 
         $this->onRequest($requestEvent);
         $this->onResponse($event);
@@ -314,15 +260,29 @@ final class RequestSubscriberSpec extends ObjectBehavior
             [
                 new StatusCode($statusCode),
                 new Endpoint($endpoint),
-                new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
-                new Organization($user->organization()->id()),
             ]
         );
-        $addMetric->__invoke(Argument::exact(new HTTPTemplate\Response()), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\Time::class), Argument::exact($tags))->shouldBeCalled();
-        $addMetric->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))->shouldBeCalled();
+        $tagsWithUser = $tags->mergeWith(
+            new TagCollection(
+                [
+                    new \Shippeo\Heimdall\Domain\Metric\Tag\User($user->id()),
+                    new Organization($user->organization()->id()),
+                ]
+            )
+        );
         $addMetric
-            ->__invoke(Argument::exact(new HTTPTemplate\DatabaseTime($databaseDuration)), Argument::exact($tags))
+            ->__invoke(
+                Argument::type(HTTPTemplate\Time::class),
+                Argument::exact($tagsWithUser)
+            )
+            ->shouldBeCalled()
+        ;
+        $addMetric
+            ->__invoke(Argument::type(HTTPTemplate\MemoryPeak::class), Argument::exact($tags))
+            ->shouldBeCalled()
+        ;
+        $addMetric
+            ->__invoke(Argument::exact(new HTTPTemplate\DatabaseTime($databaseDuration)), Argument::exact($tagsWithUser))
             ->shouldBeCalled()
         ;
 
