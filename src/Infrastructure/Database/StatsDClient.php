@@ -46,7 +46,7 @@ final class StatsDClient implements Client
         }
     }
 
-    public function gauge(Key $key, int $value): void
+    public function gauge(Key $key, float $value): void
     {
         try {
             $this->client->gauge((string) $key, $value);

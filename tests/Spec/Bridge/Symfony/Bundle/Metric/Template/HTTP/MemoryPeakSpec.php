@@ -26,7 +26,7 @@ final class MemoryPeakSpec extends ObjectBehavior
         $this->shouldHaveType(MemoryPeak::class);
     }
 
-    function it_implements_Counter()
+    function it_implements_Gauge()
     {
         $this->shouldImplement(Gauge::class);
     }
@@ -38,12 +38,12 @@ final class MemoryPeakSpec extends ObjectBehavior
 
     function it_returns_the_name()
     {
-        $this->name()->shouldBe('api.memory_peak');
+        $this->name()->shouldBe('http.memory_peak');
     }
 
     function it_returns_the_value()
     {
-        $this->value()->shouldBe($this->value);
+        $this->value()->shouldBe((float) $this->value);
     }
 
     function it_returns_the_expected_tags()
@@ -55,8 +55,6 @@ final class MemoryPeakSpec extends ObjectBehavior
                     [
                         new Name('endpoint'),
                         new Name('status_code'),
-                        new Name('user'),
-                        new Name('organization'),
                     ]
                 )
             )

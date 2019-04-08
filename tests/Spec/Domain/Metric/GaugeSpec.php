@@ -14,8 +14,8 @@ final class GaugeSpec extends ObjectBehavior
 {
     /** @var string */
     private $key = 'fakeKey';
-    /** @var int */
-    private $value = 654;
+    /** @var float */
+    private $value = 654.321;
     /** @var TagIterator */
     private $tags;
 

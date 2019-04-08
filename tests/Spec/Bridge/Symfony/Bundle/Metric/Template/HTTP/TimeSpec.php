@@ -33,7 +33,7 @@ final class TimeSpec extends ObjectBehavior
         $this->shouldHaveType(Time::class);
     }
 
-    function it_implements_Counter()
+    function it_implements_Timer()
     {
         $this->shouldImplement(Timer::class);
     }
@@ -45,7 +45,7 @@ final class TimeSpec extends ObjectBehavior
 
     function it_returns_the_name()
     {
-        $this->name()->shouldBe('api.time');
+        $this->name()->shouldBe('http.time');
     }
 
     function it_returns_the_duration()

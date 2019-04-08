@@ -13,7 +13,9 @@ use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
 use Shippeo\Heimdall\Application\Database\StatsD\StatsD;
 use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
-use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\Request;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP\StatusCode as StatusCodeTag;
+use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP\DatabaseTime;
 use Shippeo\Heimdall\Domain\Metric\Tag;
 
 /**
@@ -22,7 +24,7 @@ use Shippeo\Heimdall\Domain\Metric\Tag;
  */
 final class StatsDTest extends TestCase
 {
-    public function testSendRequestMetric(): void
+    public function testSendDatabaseTimeMetric(): void
     {
         $endpoint = 'fakeEndpoint';
         $user = new StandardUser();
@@ -30,8 +32,9 @@ final class StatsDTest extends TestCase
         $tags = new TagCollection(
             [
                 new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint($endpoint),
-                new Tag\Organization($user->organization()->id()),
+                new StatusCodeTag(new StatusCode(200)),
                 new Tag\User($user->id()),
+                new Tag\Organization($user->organization()->id()),
             ]
         );
 
@@ -39,14 +42,14 @@ final class StatsDTest extends TestCase
         /** @var Tag\TagIterator $allTags */
         $allTags = $tags->mergeWith(new TagCollection([$globalTag]))->getIterator();
         $client
-            ->increment(
+            ->gauge(
                 Argument::exact(
                     new Key(
-                        'api.request',
+                        'http.database',
                         $allTags
                     )
                 ),
-                1
+                Argument::type('float')
             )
             ->shouldBeCalled()
         ;
@@ -54,7 +57,7 @@ final class StatsDTest extends TestCase
         (
             new AddMetric([new StatsD($client->reveal())], new TagCollection([$globalTag]))
         )(
-            new Request(),
+            new DatabaseTime(12.3456),
             $tags
         );
     }

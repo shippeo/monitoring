@@ -24,7 +24,7 @@ final class Time implements Timer
 
     public function name(): string
     {
-        return 'api.time';
+        return 'http.time';
     }
 
     public function tags(): Tag\NameIterator

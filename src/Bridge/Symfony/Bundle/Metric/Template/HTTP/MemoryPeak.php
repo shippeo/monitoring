@@ -17,14 +17,14 @@ final class MemoryPeak implements Gauge
         $this->value = $value;
     }
 
-    public function value(): int
+    public function value(): float
     {
-        return $this->value;
+        return (float) $this->value;
     }
 
     public function name(): string
     {
-        return 'api.memory_peak';
+        return 'http.memory_peak';
     }
 
     public function tags(): Tag\NameIterator
@@ -33,8 +33,6 @@ final class MemoryPeak implements Gauge
             [
                 new Tag\Name('endpoint'),
                 new Tag\Name('status_code'),
-                new Tag\Name('user'),
-                new Tag\Name('organization'),
             ]
         );
     }

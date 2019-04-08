@@ -10,5 +10,5 @@ interface Client
 
     public function timing(Key $key, float $time): void;
 
-    public function gauge(Key $key, int $value): void;
+    public function gauge(Key $key, float $value): void;
 }
