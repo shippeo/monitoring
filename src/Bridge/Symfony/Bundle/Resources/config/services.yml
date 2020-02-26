@@ -19,3 +19,23 @@ services:
                 arguments:
                     - '%globalTags%'
         public: true
+
+    Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template\DoctrineTemplateCollector:
+        arguments:
+            $dataCollector: '@?data_collector.doctrine'
+
+    Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Tag\ChainTagCollector:
+        autoconfigure: false
+        arguments:
+            $collectors: !tagged Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Tag\ChainTagCollector
+
+    Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template\ChainTemplateCollector:
+        autoconfigure: false
+        arguments:
+            $collectors: !tagged Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template\ChainTemplateCollector
+
+    Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Tag\TagCollectorInterface:
+        alias: Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Tag\ChainTagCollector
+
+    Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template\TemplateCollectorInterface:
+        alias: Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template\ChainTemplateCollector
