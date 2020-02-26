@@ -1,8 +1,8 @@
-FROM composer:latest as composer-dev
+FROM php:7.2-cli-alpine as composer-dev
+WORKDIR /app
 
-ADD composer.json ./composer.json
-ADD composer.lock ./composer.lock
-ADD vendor vendor
+COPY --from=composer:latest /usr/bin/composer /bin/composer
+ADD composer.json composer.lock ./
 
 RUN composer install --no-interaction --no-progress --no-suggest
 

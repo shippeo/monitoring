@@ -1,8 +1,8 @@
-FROM composer:latest as composer-dev
+FROM php:7.2-cli-alpine as composer-dev
+WORKDIR /app
 
-ADD composer.json ./composer.json
-ADD composer.lock ./composer.lock
-ADD vendor vendor
+COPY --from=composer:latest /usr/bin/composer /bin/composer
+ADD composer.json composer.lock ./
 
 RUN composer install --no-interaction --no-progress --no-suggest
 
@@ -26,8 +26,10 @@ RUN vendor/bin/php-cs-fixer fix --dry-run --diff
 ADD phpstan.neon.dist ./phpstan.neon.dist
 RUN vendor/bin/phpstan analyse
 
-FROM composer:latest as composer-prod
+FROM php:7.2-cli-alpine as composer-prod
+WORKDIR /app
 
+COPY --from=composer:latest /usr/bin/composer /bin/composer
 COPY --from=composer-dev /app .
 
 RUN composer install --no-interaction --no-progress --no-suggest --no-dev --optimize-autoloader
