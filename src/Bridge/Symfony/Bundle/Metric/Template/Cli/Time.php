@@ -31,7 +31,7 @@ final class Time implements Timer
     {
         return new Tag\NameIterator(
             [
-                new Tag\Name('command'),
+                new Tag\Name('command_name'),
                 new Tag\Name('exit_code'),
             ]
         );
