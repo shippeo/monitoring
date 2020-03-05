@@ -30,15 +30,21 @@ final class KeySpec extends ObjectBehavior
 
     function it_returns_the_key_with_tags()
     {
-        $tag1 = new Tag();
-        $tag2 = new Tag();
+        $validTagName = 'name.0123/A-B_C';
+        $validTagValue = 'value.0123/A-B_C';
+        $invalidTagName = 'name:foo?bar';
+        $invalidTagValue = 'value.foo bar';
+        $key = '[toto]';
 
-        $this->beConstructedWith($this->key, new TagIterator([$tag1, $tag2]));
+        $tag1 = new Tag($validTagName, $invalidTagValue);
+        $tag2 = new Tag($invalidTagName, $validTagValue);
+
+        $this->beConstructedWith($key, new TagIterator([$tag1, $tag2]));
 
         $this
             ->__toString()
             ->shouldReturn(
-                $this->key.','.$tag1->name().'='.$tag1->value().','.$tag2->name().'='.$tag2->value()
+                '_toto_,'.$validTagName.'=value.foo_bar,name_foo_bar='.$validTagValue
             )
         ;
     }
