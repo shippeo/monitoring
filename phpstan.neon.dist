@@ -6,6 +6,9 @@ parameters:
 	excludes_analyse:
 		- %currentWorkingDirectory%/tests/Spec/**
 		- %currentWorkingDirectory%/src/Infrastructure/Database/StatsDClient.php # include once https://github.com/thephpleague/statsd/pull/56 is merged
+	ignoreErrors:
+		- path: %currentWorkingDirectory%/src/Application/Database/StatsD/Key.php
+		  message: '#normalize\(\) should return string but returns array\|string\|null#'
 
 includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon

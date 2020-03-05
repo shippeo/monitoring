@@ -22,11 +22,20 @@ final class Key
 
     public function __toString(): string
     {
-        $key = $this->key;
+        $key = $this->normalize($this->key);
+
         foreach ($this->tags as $tag) {
-            $key .= ','.$tag->name().'='.$tag->value();
+            $key .= ','.$this->normalize((string) $tag->name()).'='.$this->normalize($tag->value());
         }
 
         return $key;
+    }
+
+    /**
+     * @see http://opentsdb.net/docs/build/html/user_guide/writing/index.html#metrics-and-tags
+     */
+    private function normalize(string $value): string
+    {
+        return \Safe\preg_replace('#[^a-zA-Z0-9\/\.\-_]#', '_', $value);
     }
 }
