@@ -15,4 +15,5 @@ extensions:
             - src/Infrastructure
         output:
             xml: coverage/phpspec-coverage-xml
+            clover: coverage/phpspec-coverage.xml
             html: coverage/phpspec-coverage-html

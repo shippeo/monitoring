@@ -1,13 +1,54 @@
-version: 2
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@1.0.2
 
 jobs:
   build:
     working_directory: /app
     docker:
-      - image: babaorum/docker-and-compose:latest
+      - image: docker:17.05.0-ce-git
     steps:
       - checkout
       - setup_remote_docker
       - run: |
           mkdir vendor
-          docker build -f docker/php/Dockerfile .
+          docker build --file docker/php/Dockerfile .
+
+  coverage:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          mkdir vendor
+          docker build --file docker/php/Dockerfile.infection --tag php-infection .
+          docker create --name=infection php-infection
+          docker cp infection:/www-data/coverage .coverage
+      - persist_to_workspace:
+          root: /app
+          paths:
+            - .coverage/*
+
+  send-coverage:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: .
+      - codecov/upload:
+          file: ./.coverage/phpspec-coverage.xml
+          flags: unittests
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build
+      - coverage:
+          requires:
+            - build
+      - send-coverage:
+          requires:
+            - coverage
