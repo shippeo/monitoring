@@ -1,15 +1,14 @@
-version: 2
-
+version: 2.1
+executors:
+  job-executor:
+    machine:
+      image: ubuntu-2004:202101-01
 jobs:
   build:
-    working_directory: /app
-    docker:
-      - image: docker/compose:1.25.5
+    executor:
+      name: job-executor
     steps:
       - checkout
-      - setup_remote_docker:
-          version: "19.03.8"
-          docker_layer_caching: true
-      - run: |
-          mkdir vendor
+      - run:
+          mkdir -p vendor
           docker build -f docker/php/Dockerfile .
