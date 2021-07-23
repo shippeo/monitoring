@@ -1,7 +1,7 @@
 FROM php:7.2-cli-alpine as composer-dev
 WORKDIR /app
 
-COPY --from=composer:latest /usr/bin/composer /bin/composer
+COPY --from=composer:1 /usr/bin/composer /bin/composer
 ADD composer.json composer.lock ./
 
 RUN composer install --no-interaction --no-progress --no-suggest

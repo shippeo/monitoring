@@ -1,13 +1,13 @@
-version: 2
-
+version: 2.1
+executors:
+  job-executor:
+    machine:
+      image: ubuntu-2004:202101-01
 jobs:
   build:
-    working_directory: /app
-    docker:
-      - image: babaorum/docker-and-compose:latest
+    executor:
+      name: job-executor
     steps:
       - checkout
-      - setup_remote_docker
-      - run: |
-          mkdir vendor
-          docker build -f docker/php/Dockerfile .
+      - run:
+          mkdir vendor && docker build -f docker/php/Dockerfile .
