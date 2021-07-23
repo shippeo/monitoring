@@ -1,12 +1,12 @@
-FROM php:7.2-cli-alpine as composer-dev
+FROM php:7.3-cli-alpine as composer-dev
 WORKDIR /app
 
-COPY --from=composer:1 /usr/bin/composer /bin/composer
+COPY --from=composer:2 /usr/bin/composer /bin/composer
 ADD composer.json composer.lock ./
 
 RUN composer install --no-interaction --no-progress --no-suggest
 
-FROM php:7.2-cli-alpine as php-dev
+FROM php:7.3-cli-alpine as php-dev
 
 WORKDIR /www-data
 
@@ -26,16 +26,16 @@ RUN vendor/bin/php-cs-fixer fix --dry-run --diff
 ADD phpstan.neon.dist ./phpstan.neon.dist
 RUN vendor/bin/phpstan analyse
 
-FROM php:7.2-cli-alpine as composer-prod
+FROM php:7.3-cli-alpine as composer-prod
 WORKDIR /app
 
-COPY --from=composer:latest /usr/bin/composer /bin/composer
+COPY --from=composer:2 /usr/bin/composer /bin/composer
 COPY --from=composer-dev /app .
 
 RUN composer install --no-interaction --no-progress --no-suggest --no-dev --optimize-autoloader
 
 
-FROM php:7.2-cli-alpine as php-prod
+FROM php:7.3-cli-alpine as php-prod
 
 WORKDIR /www-data
 

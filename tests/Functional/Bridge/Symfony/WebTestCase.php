@@ -20,11 +20,6 @@ abstract class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestC
             static::bootKernel();
         }
 
-        $container = static::$kernel->getContainer();
-        if ($container === null) {
-            throw new \RuntimeException('container is not instanciated');
-        }
-
-        return $container;
+        return static::$kernel->getContainer();
     }
 }

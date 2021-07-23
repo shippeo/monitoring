@@ -43,7 +43,7 @@ class ContextTagCollector implements TagCollectorInterface
 
         $command = $context->command();
 
-        if (null !== $command) {
+        if (null !== $command && null !== $command->getName()) {
             $tags[] = new CommandName($command->getName());
         }
 

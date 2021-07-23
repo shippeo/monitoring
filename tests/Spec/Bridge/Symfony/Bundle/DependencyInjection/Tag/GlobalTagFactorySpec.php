@@ -29,11 +29,11 @@ class GlobalTagFactorySpec extends ObjectBehavior
         $tagValue2 = 2;
 
         $this::create(
-                [
-                    $tagName1 => $tagValue1,
-                    $tagName2 => $tagValue2,
-                ]
-            )
+            [
+                $tagName1 => $tagValue1,
+                $tagName2 => $tagValue2,
+            ]
+        )
             ->shouldBeLike(
                 new TagCollection(
                     [
@@ -51,13 +51,13 @@ class GlobalTagFactorySpec extends ObjectBehavior
         $tagValue1 = 'fakeValue1';
 
         $this::create(
-                [
-                    'value0',
-                    '' => 'value1',
-                    12 => 'value2',
-                    $tagName1 => $tagValue1,
-                ]
-            )
+            [
+                'value0',
+                '' => 'value1',
+                12 => 'value2',
+                $tagName1 => $tagValue1,
+            ]
+        )
             ->shouldBeLike(
                 new TagCollection(
                     [

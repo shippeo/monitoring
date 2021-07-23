@@ -9,10 +9,8 @@ use Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\HTTPContext;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\Cli as CliTemplate;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Template\HTTP as HTTPTemplate;
 use Shippeo\Heimdall\Domain\Metric\Timer\Time;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class ExecutionTimeTemplateCollector implements TemplateCollectorInterface, EventSubscriberInterface
