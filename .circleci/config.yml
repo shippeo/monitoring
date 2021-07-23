@@ -10,5 +10,5 @@ jobs:
     steps:
       - checkout
       - run:
-          mkdir vendor
-          docker build -f docker/php/Dockerfile .
+          - mkdir vendor
+          - docker build -f docker/php/Dockerfile .
