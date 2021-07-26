@@ -1,4 +1,4 @@
-FROM php:7.2-cli-alpine as composer-dev
+FROM php:7.3-cli-alpine as composer-dev
 WORKDIR /app
 
 COPY --from=composer:latest /usr/bin/composer /bin/composer
@@ -6,7 +6,7 @@ ADD composer.json composer.lock ./
 
 RUN composer install --no-interaction --no-progress --no-suggest
 
-FROM php:7.2-cli-alpine as php-dev
+FROM php:7.3-cli-alpine as php-dev
 
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install xdebug-2.6.0 && docker-php-ext-enable xdebug \
