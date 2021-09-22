@@ -19,10 +19,14 @@ use Shippeo\Heimdall\Domain\Metric\Template\Template;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 final class MonitoringSubscriberSpec extends ObjectBehavior
 {
@@ -60,16 +64,16 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
         AddMetric $addMetric,
         TagCollectorInterface $tagCollector,
         TemplateCollectorInterface $templateCollector,
-        PostResponseEvent $event,
-        HttpFoundation\Response $response,
-        HttpFoundation\Request $request,
+        KernelInterface $kernel,
         Template $template1,
         Template $template2,
         Tag $tag1,
         Tag $tag2
     ) {
-        $event->getResponse()->willReturn($response);
-        $event->getRequest()->willReturn($request);
+        $request = Request::create('/foo/bar');
+        $response = new Response();
+
+        $event = new TerminateEvent($kernel->getWrappedObject(), $request, $response);
 
         $tagCollector->http(Argument::type(HTTPContext::class))->willReturn([$tag1, $tag2])->shouldBeCalled();
         $templateCollector->http(Argument::type(HTTPContext::class))->willReturn([$template1, $template2])->shouldBeCalled();
@@ -77,6 +81,7 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
 
         $addMetric->__invoke($template1, $tagCollection)->shouldBeCalledOnce();
         $addMetric->__invoke($template2, $tagCollection)->shouldBeCalledOnce();
+
         $this->onKernelTerminate($event);
     }
 
@@ -84,15 +89,15 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
         AddMetric $addMetric,
         TagCollectorInterface $tagCollector,
         TemplateCollectorInterface $templateCollector,
-        ConsoleTerminateEvent $event,
         Command $command,
+        InputInterface $input,
+        OutputInterface $output,
         Template $template1,
         Template $template2,
         Tag $tag1,
         Tag $tag2
     ) {
-        $event->getCommand()->willReturn($command);
-        $event->getExitCode()->willReturn(0);
+        $event = new ConsoleTerminateEvent($command->getWrappedObject(), $input->getWrappedObject(), $output->getWrappedObject(), 0);
 
         $tagCollector->cli(Argument::type(CliContext::class))->willReturn([$tag1, $tag2])->shouldBeCalled();
         $templateCollector->cli(Argument::type(CliContext::class))->willReturn([$template1, $template2])->shouldBeCalled();
@@ -100,6 +105,7 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
 
         $addMetric->__invoke($template1, $tagCollection)->shouldBeCalledOnce();
         $addMetric->__invoke($template2, $tagCollection)->shouldBeCalledOnce();
+
         $this->onConsoleTerminate($event);
     }
 
@@ -113,8 +119,9 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
         AddMetric $addMetric,
         TagCollectorInterface $tagCollector,
         TemplateCollectorInterface $templateCollector,
-        ConsoleTerminateEvent $event,
         Command $command,
+        InputInterface $input,
+        OutputInterface $output,
         Template $template1,
         Template $template2,
         Tag $tag1,
@@ -123,8 +130,7 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
         $command->implement(AutomaticMonitoringDisablerInterface::class);
         $command->isAutomaticMonitoringDisabled()->willReturn(false);
 
-        $event->getCommand()->willReturn($command);
-        $event->getExitCode()->willReturn(0);
+        $event = new ConsoleTerminateEvent($command->getWrappedObject(), $input->getWrappedObject(), $output->getWrappedObject(), 0);
 
         $tagCollector->cli(Argument::type(CliContext::class))->willReturn([$tag1, $tag2])->shouldBeCalled();
         $templateCollector->cli(Argument::type(CliContext::class))->willReturn([$template1, $template2])->shouldBeCalled();
@@ -132,6 +138,7 @@ final class MonitoringSubscriberSpec extends ObjectBehavior
 
         $addMetric->__invoke($template1, $tagCollection)->shouldBeCalledOnce();
         $addMetric->__invoke($template2, $tagCollection)->shouldBeCalledOnce();
+
         $this->onConsoleTerminate($event);
     }
 }

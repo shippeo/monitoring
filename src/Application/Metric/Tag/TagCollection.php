@@ -8,14 +8,25 @@ use Shippeo\Heimdall\Application\Util\TypedCollection;
 use Shippeo\Heimdall\Domain\Metric\Tag\Tag;
 use Shippeo\Heimdall\Domain\Metric\Tag\TagIterator;
 
+/**
+ * @extends TypedCollection<Tag>
+ */
 final class TagCollection extends TypedCollection
 {
-    /** @var Tag[] */
-    protected $elements;
-
+    /** @param Tag[] $tags */
     public function __construct(array $tags)
     {
         parent::__construct(Tag::class, $tags);
+    }
+
+    public function mergeWith(self $collection): self
+    {
+        return new self(
+            \array_merge(
+                $this->toArray(),
+                $collection->toArray()
+            )
+        );
     }
 
     /**

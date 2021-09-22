@@ -9,6 +9,7 @@ use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\GlobalTag;
 
 final class GlobalTagFactory
 {
+    /** @param array<int|string, scalar> $tags */
     public static function create(array $tags): TagCollection
     {
         $collection = new TagCollection([]);

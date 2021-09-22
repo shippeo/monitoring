@@ -6,27 +6,26 @@
     "require": {
         "php": "^7.2",
         "league/statsd": "^1.4",
-        "thecodingmachine/safe": "^0.1.11",
+        "thecodingmachine/safe": "^v1.3.3",
         "webmozart/assert": "^1.4"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^1.10 || ^2.0",
         "friendsofphp/php-cs-fixer": "^2.14",
-        "infection/infection": "^0.12.2",
-        "jangregor/phpstan-prophecy": "^0.3.0",
-        "leanphp/phpspec-code-coverage": "dev-master",
-        "matthiasnoback/symfony-dependency-injection-test": "^3.1",
+        "jangregor/phpstan-prophecy": "^0.8.1",
+        "friends-of-phpspec/phpspec-code-coverage": "v5.0.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.3",
         "pedrotroller/php-cs-custom-fixer": "^2.16",
-        "phpspec/phpspec": "^5.1",
-        "phpstan/phpstan": "^0.11",
-        "phpstan/phpstan-phpunit": "^0.11.0",
-        "phpstan/phpstan-strict-rules": "^0.11",
-        "phpstan/phpstan-webmozart-assert": "^0.11.0",
-        "phpunit/phpunit": "^7.5",
-        "symfony/browser-kit": "^4.0 || ^5.0",
-        "symfony/framework-bundle": "^4.0 || ^5.0",
-        "symfony/var-dumper": "^4.0 || ^5.0",
-        "thecodingmachine/phpstan-safe-rule": "^0.1"
+        "phpspec/phpspec": "^6.3.1",
+        "phpstan/phpstan": "^0.12.99",
+        "phpstan/phpstan-phpunit": "^0.12.22",
+        "phpstan/phpstan-strict-rules": "^0.12.11",
+        "phpstan/phpstan-webmozart-assert": "^0.12.16",
+        "phpunit/phpunit": "^8.5.20",
+        "symfony/browser-kit": "^5.0",
+        "symfony/framework-bundle": "^5.0",
+        "symfony/var-dumper": "^5.0",
+        "thecodingmachine/phpstan-safe-rule": "^v1.0.1"
     },
     "suggest": {
         "symfony/framework-bundle": "Needed to use the symfony bridge",
@@ -60,6 +59,6 @@
     },
     "conflict": {
         "doctrine/doctrine-bundle": "<1.10,>=3.0",
-        "symfony/framework-bundle": "<4.0,>=6.0"
+        "symfony/framework-bundle": "<5.0,>=6.0"
     }
 }

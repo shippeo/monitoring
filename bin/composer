@@ -3,4 +3,4 @@
 docker run --rm --interactive --tty --user $UID \
                     --volume $PWD:/app \
                     --volume $COMPOSER_HOME:/tmp \
-                    composer $@
+                    composer:2 $@

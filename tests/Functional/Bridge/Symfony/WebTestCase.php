@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 
 abstract class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
+    /** @param array<mixed> $options */
     protected static function createKernel(array $options = [])
     {
         return new Kernel();

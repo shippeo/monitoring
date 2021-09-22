@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template;
+namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template;
 
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\CliContext;

@@ -22,31 +22,37 @@ class DoctrineTemplateCollector implements TemplateCollectorInterface
         $this->dataCollector = $dataCollector;
     }
 
+    /** {@inheritDoc} */
     public function http(HTTPContext $context): array
     {
         if (null === $this->dataCollector) {
             return [];
         }
 
+        /** @var DoctrineDataCollector $dataCollector */
+        $dataCollector = $this->dataCollector;
         $this->collect($context->request(), $context->response());
 
         return [
-            new HTTPTemplate\DatabaseTime((float) $this->dataCollector->getTime()),
-            new HTTPTemplate\QueryCount((int) $this->dataCollector->getQueryCount()),
+            new HTTPTemplate\DatabaseTime((float) $dataCollector->getTime()),
+            new HTTPTemplate\QueryCount((int) $dataCollector->getQueryCount()),
         ];
     }
 
+    /** {@inheritDoc} */
     public function cli(CliContext $context): array
     {
         if (null === $this->dataCollector) {
             return [];
         }
 
+        /** @var DoctrineDataCollector $dataCollector */
+        $dataCollector = $this->dataCollector;
         $this->collect(new Request(), new Response());
 
         return [
-            new CliTemplate\DatabaseTime((float) $this->dataCollector->getTime()),
-            new CliTemplate\QueryCount((int) $this->dataCollector->getQueryCount()),
+            new CliTemplate\DatabaseTime((float) $dataCollector->getTime()),
+            new CliTemplate\QueryCount((int) $dataCollector->getQueryCount()),
         ];
     }
 
@@ -56,9 +62,12 @@ class DoctrineTemplateCollector implements TemplateCollectorInterface
             return;
         }
 
-        if (\Closure::bind(function () {
-            return \count($this->data ?? []) === 0;
-        }, $this->dataCollector, DoctrineDataCollector::class)()) {
+        /** @var bool $isDataCollected */
+        $isDataCollected = \Closure::bind(function (): bool {
+            return \count($this->data ?? []) > 0;
+        }, $this->dataCollector, DoctrineDataCollector::class)();
+
+        if (!$isDataCollected) {
             $this->dataCollector->collect($request, $response);
         }
     }

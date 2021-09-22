@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shippeo\Heimdall\Application;
 
 use Shippeo\Heimdall\Application\Metric\Tag\TagCollection;
+use Shippeo\Heimdall\Domain\Database\Database;
 use Shippeo\Heimdall\Domain\Database\DatabaseIterator;
 use Shippeo\Heimdall\Domain\Metric\Factory;
 use Shippeo\Heimdall\Domain\Metric\Template\Template;
@@ -17,6 +18,7 @@ class AddMetric
     /** @var Factory */
     private $factory;
 
+    /** @param iterable<Database> $databases */
     public function __construct(iterable $databases, TagCollection $globalTags)
     {
         $this->saveMetric = new SaveMetric(new DatabaseIterator($databases));

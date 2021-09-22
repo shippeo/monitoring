@@ -14,7 +14,7 @@ use Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\HTTP\StatusCode;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Shippeo\Heimdall\Domain\Metric\Tag;
 use Shippeo\Heimdall\Infrastructure\Database\StatsDClient;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class HTTPTest extends WebTestCase
 {
-    /** @var \Symfony\Bundle\FrameworkBundle\Client */
+    /** @var KernelBrowser */
     private $client;
 
     /**
@@ -40,18 +40,8 @@ final class HTTPTest extends WebTestCase
     {
         $statsDClient = $this->prophesize(Client::class);
 
-        $this->clientContainer()->set(StatsDClient::class, $statsDClient->reveal());
+        $this->client->getContainer()->set(StatsDClient::class, $statsDClient->reveal());
 
-        $endTags = new Tag\TagIterator(
-            [
-                new \Shippeo\Heimdall\Bridge\Symfony\Bundle\Metric\Tag\Endpoint('index'),
-                new StatusCode(new Code(Response::HTTP_OK)),
-                new Tag\NullTag(new Tag\Name('user')),
-                new Tag\NullTag(new Tag\Name('organization')),
-                new GlobalTag('globalTag1', 'globalTagValue1'),
-                new GlobalTag('globalTag2', '2'),
-            ]
-        );
         $statsDClient
             ->timing(
                 Argument::exact(
@@ -104,7 +94,7 @@ final class HTTPTest extends WebTestCase
         $statsDClient = $this->prophesize(Client::class);
 
         $this->setConnectedUser($user);
-        $this->clientContainer()->set(StatsDClient::class, $statsDClient->reveal());
+        $this->client->getContainer()->set(StatsDClient::class, $statsDClient->reveal());
 
         $statsDClient
             ->timing(
@@ -158,7 +148,7 @@ final class HTTPTest extends WebTestCase
         $statsDClient = $this->prophesize(Client::class);
 
         $this->setConnectedUser($user);
-        $this->clientContainer()->set(StatsDClient::class, $statsDClient->reveal());
+        $this->client->getContainer()->set(StatsDClient::class, $statsDClient->reveal());
 
         $statsDClient
             ->timing(
@@ -211,15 +201,5 @@ final class HTTPTest extends WebTestCase
         /** @var FakeUserProvider $userProvider */
         $userProvider = $this->container()->get(UserProvider::class);
         $userProvider->setConnectedUser($user);
-    }
-
-    private function clientContainer(): ContainerInterface
-    {
-        $container = $this->client->getContainer();
-        if ($container === null) {
-            throw new \RuntimeException('container is not available');
-        }
-
-        return $container;
     }
 }

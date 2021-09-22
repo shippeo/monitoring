@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template;
+namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template;
 
 use Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector;
 use PhpSpec\ObjectBehavior;

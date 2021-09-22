@@ -13,9 +13,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 final class MonitoringExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
+    /** @param array<mixed> $configs */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration(new Configuration(), $configs);

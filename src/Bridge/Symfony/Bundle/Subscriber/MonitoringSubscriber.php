@@ -13,7 +13,7 @@ use Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Template\TemplateCollectorI
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class MonitoringSubscriber implements EventSubscriberInterface
@@ -46,7 +46,7 @@ final class MonitoringSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelTerminate(PostResponseEvent $event): void
+    public function onKernelTerminate(TerminateEvent $event): void
     {
         $context = HTTPContext::fromTerminateEvent($event);
         $tags = new TagCollection($this->tagCollector->http($context));
