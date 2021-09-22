@@ -6,11 +6,13 @@ namespace Shippeo\Heimdall\Domain\Metric\Tag;
 
 use Webmozart\Assert\Assert;
 
-final class NameIterator implements \Iterator
+/** @implements \IteratorAggregate<int, Name> */
+final class NameIterator implements \IteratorAggregate
 {
     /** @var Name[] */
     private $names = [];
 
+    /** @param iterable<int|Name> $names */
     public function __construct(iterable $names)
     {
         Assert::allIsInstanceOf($names, Name::class);
@@ -21,44 +23,10 @@ final class NameIterator implements \Iterator
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<int, Name>
      */
-    public function current(): Name
+    public function getIterator(): \Generator
     {
-        return \current($this->names);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next(): void
-    {
-        \next($this->names);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return null|int|string
-     */
-    public function key()
-    {
-        return \key($this->names);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return \current($this->names) !== false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        \reset($this->names);
+        yield from $this->names;
     }
 }

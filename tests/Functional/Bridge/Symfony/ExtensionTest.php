@@ -20,7 +20,7 @@ final class ExtensionTest extends AbstractExtensionTestCase
     private $host = 'fakeStatsDHost';
     /** @var int */
     private $port = 9874;
-    /** @var array */
+    /** @var array<string, scalar> */
     private $globalTags = [
         'globalTagName1' => 'globalTagValue1',
         'globalTagName2' => 2,

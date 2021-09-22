@@ -8,6 +8,7 @@ use Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\CliContext;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\HTTPContext;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Provider\UserProvider;
 use Shippeo\Heimdall\Domain\Metric\Tag\Organization;
+use Shippeo\Heimdall\Domain\Metric\Tag\Tag;
 use Shippeo\Heimdall\Domain\Metric\Tag\User;
 use Shippeo\Heimdall\Domain\Model\StandardUser;
 
@@ -21,16 +22,19 @@ class UserTagCollector implements TagCollectorInterface
         $this->userProvider = $userProvider;
     }
 
+    /** {@inheritDoc} */
     public function http(HTTPContext $context): array
     {
         return $this->collect();
     }
 
+    /** {@inheritDoc} */
     public function cli(CliContext $context): array
     {
         return $this->collect();
     }
 
+    /** @return Tag[] */
     private function collect(): array
     {
         $user = $this->userProvider->connectedUser();

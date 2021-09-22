@@ -6,7 +6,7 @@ suites:
         spec_path: 'tests'
         spec_prefix: 'Spec'
 extensions:
-    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    FriendsOfPhpSpec\PhpSpec\CodeCoverage\CodeCoverageExtension:
         format:
             - xml
             - html

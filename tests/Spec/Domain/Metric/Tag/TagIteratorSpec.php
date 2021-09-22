@@ -20,9 +20,9 @@ final class TagIteratorSpec extends ObjectBehavior
         $this->shouldHaveType(TagIterator::class);
     }
 
-    function it_implements_Iterator()
+    function it_implements_IteratorAggregate()
     {
-        $this->shouldImplement(\Iterator::class);
+        $this->shouldImplement(\IteratorAggregate::class);
     }
 
     function it_throws_an_exception_when_not_all_instance_of_Tag()
@@ -47,17 +47,6 @@ final class TagIteratorSpec extends ObjectBehavior
 
         $this->beConstructedWith([$tag1, $tag2]);
 
-        $this->valid()->shouldBe(true);
-        $this->key()->shouldBe(0);
-        $this->current()->shouldBe($tag1);
-        $this->next();
-        $this->valid()->shouldBe(true);
-        $this->key()->shouldBe(1);
-        $this->current()->shouldBe($tag2);
-        $this->next();
-        $this->valid()->shouldBe(false);
-        $this->rewind();
-        $this->valid()->shouldBe(true);
-        $this->current()->shouldBe($tag1);
+        $this->shouldIterateAs([$tag1, $tag2]);
     }
 }

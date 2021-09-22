@@ -20,9 +20,9 @@ class DatabaseIteratorSpec extends ObjectBehavior
         $this->shouldHaveType(DatabaseIterator::class);
     }
 
-    function it_implements_Iterator()
+    function it_implements_IteratorAggregate()
     {
-        $this->shouldImplement(\Iterator::class);
+        $this->shouldImplement(\IteratorAggregate::class);
     }
 
     function it_throws_an_InvalidArgumentException_if_an_invalid_instance_is_passed_as_argument()
@@ -36,18 +36,6 @@ class DatabaseIteratorSpec extends ObjectBehavior
     {
         $this->beConstructedWith([$database1, $database2]);
 
-        $this->valid()->shouldBe(true);
-        $this->key()->shouldBe(0);
-        $this->current()->shouldBe($database1);
-        $this->next();
-        $this->valid()->shouldBe(true);
-        $this->key()->shouldBe(1);
-        $this->current()->shouldBe($database2);
-        $this->next();
-        $this->valid()->shouldBe(false);
-        $this->rewind();
-        $this->valid()->shouldBe(true);
-        $this->key()->shouldBe(0);
-        $this->current()->shouldBe($database1);
+        $this->shouldIterateAs([$database1, $database2]);
     }
 }

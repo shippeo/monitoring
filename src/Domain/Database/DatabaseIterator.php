@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Shippeo\Heimdall\Domain\Database;
 
-final class DatabaseIterator implements \Iterator
+/**
+ * @implements \IteratorAggregate<int, Database>
+ */
+final class DatabaseIterator implements \IteratorAggregate
 {
     /** @var Database[] */
     private $databases = [];
 
+    /** @param iterable<Database> $databases */
     public function __construct(iterable $databases)
     {
         foreach ($databases as $database) {
@@ -21,44 +25,10 @@ final class DatabaseIterator implements \Iterator
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<int, Database>
      */
-    public function current(): Database
+    public function getIterator(): \Generator
     {
-        return \current($this->databases);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next(): void
-    {
-        \next($this->databases);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return null|int|string
-     */
-    public function key()
-    {
-        return \key($this->databases);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return \current($this->databases) !== false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        \reset($this->databases);
+        yield from $this->databases;
     }
 }

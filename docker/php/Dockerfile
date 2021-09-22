@@ -24,7 +24,7 @@ ADD .php_cs.dist ./.php_cs.dist
 RUN vendor/bin/php-cs-fixer fix --dry-run --diff
 
 ADD phpstan.neon.dist ./phpstan.neon.dist
-RUN vendor/bin/phpstan analyse
+RUN php -d memory_limit=-1 vendor/bin/phpstan analyse
 
 FROM php:7.3-cli-alpine as composer-prod
 WORKDIR /app

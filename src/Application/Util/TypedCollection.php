@@ -6,14 +6,23 @@ namespace Shippeo\Heimdall\Application\Util;
 
 use Webmozart\Assert\Assert;
 
+/**
+ * @template E
+ * @implements \ArrayAccess<int, E>
+ * @implements \IteratorAggregate<int, E>
+ */
 abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
 {
-    /** @var array */
+    /** @var array<int, E> */
     protected $elements;
 
-    /** @var string */
+    /** @var class-string<E> */
     private $type;
 
+    /**
+     * @param class-string<E> $type
+     * @param array<int, E>   $elements
+     */
     public function __construct(string $type, array $elements)
     {
         $this->type = $type;
@@ -22,16 +31,7 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
         $this->elements = $elements;
     }
 
-    public function mergeWith(self $collection): self
-    {
-        return new static(
-            \array_merge(
-                $this->toArray(),
-                $collection->toArray()
-            )
-        );
-    }
-
+    /** @return array<int, E> */
     public function toArray(): array
     {
         return $this->elements;
@@ -62,8 +62,8 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
     /**
      * {@inheritdoc}
      *
-     * @param mixed $offset
-     * @param mixed $value
+     * @param null|int $offset
+     * @param E        $value
      */
     public function offsetSet($offset, $value): void
     {

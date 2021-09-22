@@ -6,11 +6,13 @@ namespace Shippeo\Heimdall\Domain\Metric\Tag;
 
 use Webmozart\Assert\Assert;
 
-final class TagIterator implements \Iterator
+/** @implements \IteratorAggregate<int, Tag> */
+final class TagIterator implements \IteratorAggregate
 {
     /** @var Tag[] */
     private $tags = [];
 
+    /** @param iterable<int, Tag> $tags */
     public function __construct(iterable $tags)
     {
         Assert::allIsInstanceOf($tags, Tag::class);
@@ -21,45 +23,9 @@ final class TagIterator implements \Iterator
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function current(): Tag
+    /** @return \Generator<int, Tag> */
+    public function getIterator(): \Generator
     {
-        return \current($this->tags);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next(): void
-    {
-        \next($this->tags);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return null|int|string
-     */
-    public function key()
-    {
-        return \key($this->tags);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid(): bool
-    {
-        return \current($this->tags) !== false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind(): void
-    {
-        \reset($this->tags);
+        yield from $this->tags;
     }
 }

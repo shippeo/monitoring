@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Tag;
+namespace Spec\Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\Tag;
 
 use PhpSpec\ObjectBehavior;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector\CliContext;

@@ -6,7 +6,7 @@ namespace Shippeo\Heimdall\Bridge\Symfony\Bundle\Collector;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 class HTTPContext
 {
@@ -21,7 +21,7 @@ class HTTPContext
         $this->response = $response;
     }
 
-    public static function fromTerminateEvent(PostResponseEvent $event): self
+    public static function fromTerminateEvent(TerminateEvent $event): self
     {
         return new self($event->getRequest(), $event->getResponse());
     }
