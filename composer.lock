@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "427e0d417ed235762e76a6f9d7c5e58e",
+    "content-hash": "b1d18bde017c898992b378169a4e3ac0",
     "packages": [
         {
             "name": "league/statsd",
@@ -6968,7 +6968,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2"
+        "php": "^7.2 || ^8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
