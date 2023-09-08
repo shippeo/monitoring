@@ -27,6 +27,7 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
     {
         $this->type = $type;
 
+        /**  @phpstan-ignore-next-line */
         Assert::allIsInstanceOf($elements, $this->type);
         $this->elements = $elements;
     }
@@ -48,12 +49,23 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * method to avoid issues with offsetExist() method in phpspecs but allows testing the real method
+     *
+     * @param mixed $offset
+     */
+    public function offsetExistsInCollection($offset): bool
+    {
+        return $this->offsetExists($offset);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param mixed $offset
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->elements[$offset];
@@ -65,8 +77,10 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
      * @param null|int $offset
      * @param E        $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
+        /**  @phpstan-ignore-next-line */
         Assert::isInstanceOf($value, $this->type);
 
         if ($offset === null) {
@@ -81,6 +95,7 @@ abstract class TypedCollection implements \ArrayAccess, \IteratorAggregate
      *
      * @param mixed $offset
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
         unset($this->elements[$offset]);

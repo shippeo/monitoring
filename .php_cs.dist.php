@@ -1,15 +1,16 @@
 <?php
 
-return \PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+$config
     ->setFinder(
-        \PhpCsFixer\Finder::create()
+        PhpCsFixer\Finder::create()
             ->in(['src', 'tests'])
     )
     ->registerCustomFixers(new PedroTroller\CS\Fixer\Fixers())
+    ->setRiskyAllowed(true)
+    ->setUsingCache(false)
     ->setRules(
         [
-            '@PhpCsFixer' => true,
-            '@PhpCsFixer:risky' => true,
             '@DoctrineAnnotation' => true,
             'date_time_immutable' => true,
             'declare_strict_types' => true,
@@ -20,7 +21,7 @@ return \PhpCsFixer\Config::create()
             'method_argument_space' => [
                 'on_multiline' => 'ensure_fully_multiline',
             ],
-            'native_function_invocation' => true,
+            'native_function_invocation' => ['strict' => false],
             'php_unit_test_case_static_method_calls' => [
                 'call_type' => 'static',
             ],
@@ -32,6 +33,6 @@ return \PhpCsFixer\Config::create()
             'PedroTroller/phpspec' => true,
         ]
     )
-    ->setRiskyAllowed(true)
-    ->setUsingCache(false)
 ;
+
+return $config;
