@@ -35,7 +35,7 @@ class DoctrineTemplateCollector implements TemplateCollectorInterface
 
         return [
             new HTTPTemplate\DatabaseTime((float) $dataCollector->getTime()),
-            new HTTPTemplate\QueryCount((int) $dataCollector->getQueryCount()),
+            new HTTPTemplate\QueryCount($dataCollector->getQueryCount()),
         ];
     }
 
@@ -52,7 +52,7 @@ class DoctrineTemplateCollector implements TemplateCollectorInterface
 
         return [
             new CliTemplate\DatabaseTime((float) $dataCollector->getTime()),
-            new CliTemplate\QueryCount((int) $dataCollector->getQueryCount()),
+            new CliTemplate\QueryCount($dataCollector->getQueryCount()),
         ];
     }
 
@@ -64,6 +64,7 @@ class DoctrineTemplateCollector implements TemplateCollectorInterface
 
         /** @var bool $isDataCollected */
         $isDataCollected = \Closure::bind(function (): bool {
+            /**  @phpstan-ignore-next-line */
             return \count($this->data ?? []) > 0;
         }, $this->dataCollector, DoctrineDataCollector::class)();
 

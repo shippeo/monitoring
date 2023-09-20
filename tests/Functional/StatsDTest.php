@@ -8,6 +8,7 @@ use Fake\StandardUser;
 use Fake\Tag as FakeTag;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Shippeo\Heimdall\Application\AddMetric;
 use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
@@ -24,6 +25,8 @@ use Shippeo\Heimdall\Domain\Metric\Tag;
  */
 final class StatsDTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testSendDatabaseTimeMetric(): void
     {
         $endpoint = 'fakeEndpoint';

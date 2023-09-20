@@ -3,4 +3,4 @@
 docker run --rm --rm --interactive --tty --user $UID \
                     --workdir /app \
                     --volume $PWD:/app \
-                    php:7.2-cli-alpine $@
+                    php:8.1-cli-alpine $@

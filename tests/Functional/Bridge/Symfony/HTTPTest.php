@@ -6,6 +6,7 @@ namespace Functional\Bridge\Symfony;
 
 use Functional\Fake\Bridge\Symfony\Provider\UserProvider as FakeUserProvider;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Shippeo\Heimdall\Application\Database\StatsD\Client;
 use Shippeo\Heimdall\Application\Database\StatsD\Key;
 use Shippeo\Heimdall\Bridge\Symfony\Bundle\HTTP\StatusCode as Code;
@@ -23,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class HTTPTest extends WebTestCase
 {
+    use ProphecyTrait;
+
     /** @var KernelBrowser */
     private $client;
 

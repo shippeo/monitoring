@@ -1,5 +1,12 @@
 # Monitoring
 
+## Compatibility
+
+|Version|PHP Compatibility|
+|---|---|
+|0.6.0|^8.1|
+|0.5.6|^7.2 \| ^8.0|
+
 ## Install
 
 Monitoring contains a library with the name Heimdall.

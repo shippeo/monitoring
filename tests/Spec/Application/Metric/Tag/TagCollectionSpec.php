@@ -93,12 +93,12 @@ final class TagCollectionSpec extends ObjectBehavior
         $offset = 0;
         $tag = new Tag();
 
-        $this->offsetExists($offset)->shouldBe(false);
+        $this->offsetExistsInCollection($offset)->shouldBe(false);
         $this->offsetSet($offset, $tag);
-        $this->offsetExists($offset)->shouldBe(true);
+        $this->offsetExistsInCollection($offset)->shouldBe(true);
         $this->offsetGet($offset)->shouldBe($tag);
         $this->offsetUnset($offset);
-        $this->offsetExists($offset)->shouldBe(false);
+        $this->offsetExistsInCollection($offset)->shouldBe(false);
     }
 
     function it_returns_the_tags_as_an_array()

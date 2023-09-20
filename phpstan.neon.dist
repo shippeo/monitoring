@@ -3,7 +3,7 @@ parameters:
 	paths:
 		- %currentWorkingDirectory%/src
 		- %currentWorkingDirectory%/tests
-	excludes_analyse:
+	excludePaths:
 		- %currentWorkingDirectory%/tests/Spec/**
 		- %currentWorkingDirectory%/src/Infrastructure/Database/StatsDClient.php # include once https://github.com/thephpleague/statsd/pull/56 is merged
 	treatPhpDocTypesAsCertain: false

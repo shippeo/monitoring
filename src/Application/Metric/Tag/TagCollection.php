@@ -42,6 +42,9 @@ final class TagCollection extends TypedCollection
      */
     public function offsetGet($offset): Tag
     {
-        return parent::offsetGet($offset);
+        /** @var Tag $tag */
+        $tag = parent::offsetGet($offset);
+
+        return $tag;
     }
 }
