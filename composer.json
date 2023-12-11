@@ -6,7 +6,7 @@
     "require": {
         "php": "^8.1",
         "league/statsd": "^1.4",
-        "thecodingmachine/safe": "^v1.3.3",
+        "thecodingmachine/safe": "^v2.5",
         "webmozart/assert": "^1.4"
     },
     "require-dev": {
