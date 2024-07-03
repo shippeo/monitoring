@@ -45,4 +45,11 @@ final class DurationSpec extends ObjectBehavior
 
         $this->asSeconds()->shouldBe($end->asSeconds() - $start->asSeconds());
     }
+
+    function it_is_initializable_with_negative_value()
+    {
+        $this->beConstructedWith(-1);
+
+        $this->asSeconds()->shouldBe(0.0);
+    }
 }

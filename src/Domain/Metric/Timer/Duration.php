@@ -16,7 +16,11 @@ final class Duration
      */
     public function __construct(float $duration)
     {
-        Assert::greaterThanEq($duration, 0, 'A duration must be positive');
+        try {
+            Assert::greaterThan($duration, 0, 'A duration must be positive or equal to 0.');
+        } catch (\InvalidArgumentException $e) {
+            $duration = 0;
+        }
 
         $this->duration = $duration;
     }
